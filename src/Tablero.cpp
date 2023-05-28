@@ -28,10 +28,11 @@ void Tablero::GenerateTablero(const std::string& file) {
     }
 
     f.close();
-    tab = new TipoCasilla*[xLength];
-    for (int i = 0; i < xLength; i++) {
-        tab[i] = new TipoCasilla[yLength];
-    }
+
+    // tab = TipoCasilla[xLength];
+    // for (int i = 0; i < xLength; i++) {
+    //     tab[i] = new TipoCasilla[yLength];
+    // }
 
     int cont = 0;
 
@@ -89,13 +90,10 @@ void Tablero::Render(int offsetX, int offsetY, bool renderInitPos = false) {
 }
 
 void Tablero::DeleteTablero() {
-    for (int i = 0; i < getWidth(); i++) {
-        delete[] tab[i];
-    }
-    delete[] tab;
+    tab.clear();
 }
 
-bool Tablero::ThereIsWall(Coor c){
+bool Tablero::thereIsWall(Coor c){
     return tab[c.x][c.y] == WALL;
 }
 

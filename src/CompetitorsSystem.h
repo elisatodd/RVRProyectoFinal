@@ -18,15 +18,15 @@ private:
     int maxScore_;
 
 public:
-    CompetitorsSystem(GameMode gM, int maxScores, Tablero tab);
+    CompetitorsSystem(GameMode gM, int maxScores, Tablero* tab);
     //Borra sus elementos y a los jugadores
     ~CompetitorsSystem();
 
-    Winner CheckCollisions(Tablero& tab, int renderOffsetX, int renderOffsetY);
+    Winner CheckCollisions(Tablero* tab, int renderOffsetX, int renderOffsetY);
     void render(int offsetX, int offsetY);
     void showPoints(int offsetX);
-    void Update(Tablero& tab, GameMode& gameMode);
-    bool thisCollide(Coor c, Tablero& tab);
+    void Update(Tablero* tab, GameMode& gameMode);
+    bool thisCollide(Coor c, Tablero* tab);
     //ConsoleColor getMotorbikeColor(int i);
     void RoundOver();
 

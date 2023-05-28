@@ -5,21 +5,21 @@
 #include <thread>
 #include <chrono>
 
-CompetitorsSystem::CompetitorsSystem(GameMode gM, int maxScores, Tablero tab) {
+CompetitorsSystem::CompetitorsSystem(GameMode gM, int maxScores, Tablero* tab) {
     maxScore_ = maxScores;
     players.resize(2);
 
-    players[0]->player = new Player(tab.getPlayer1InitialPosition());
+    players[0]->player = new Player(tab->getPlayer1InitialPosition());
     players[0]->player->setControls("W", "S", "D", "A");
     players[0]->points = 0;
 
     switch (gM) {
         case TWO_PLAYER:
-            players[1]->player =new Player(tab.getPlayer2InitialPosition());
+            players[1]->player =new Player(tab->getPlayer2InitialPosition());
             break;
         case SINGLE_PLAYER:
         default:
-            players[1]->player = new Player(tab.getPlayer2InitialPosition());
+            players[1]->player = new Player(tab->getPlayer2InitialPosition());
             break;
     }
     players[1]->player->setControls("W", "S", "D", "A");
@@ -36,7 +36,7 @@ CompetitorsSystem::~CompetitorsSystem() {
     }
 }
 
-Winner CompetitorsSystem::CheckCollisions(Tablero& tab, int renderOffsetX, int renderOffsetY) {
+Winner CompetitorsSystem::CheckCollisions(Tablero*tab, int renderOffsetX, int renderOffsetY) {
     CollisionState colState = NONE_COLLIDED;
 
     if (players[0]->player->getPlayerHead() == players[1]->player->getPlayerHead())
@@ -88,14 +88,14 @@ void CompetitorsSystem::showPoints(int offsetX) {
     // }
 }
 
-void CompetitorsSystem::Update(Tablero& tab, GameMode& gameMode) {
+void CompetitorsSystem::Update(Tablero* tab, GameMode& gameMode) {
     std::vector<char> c = getInput2(gameMode);
     for (int i = 0; i < players.size(); i++) {
         players[i]->player->update(this, tab, c[i], gameMode);
     }
 }
 
-bool CompetitorsSystem::thisCollide(Coor c, Tablero& tab) {
+bool CompetitorsSystem::thisCollide(Coor c, Tablero* tab) {
     bool b = false;
     int i = 0;
 
@@ -104,7 +104,7 @@ bool CompetitorsSystem::thisCollide(Coor c, Tablero& tab) {
         i++;
     }
 
-    return (tab.thereIsWall(c) || b);
+    return (tab->thereIsWall(c) || b);
 }
 
 // ConsoleColor CompetitorsSystem::getplayerColor(int i) {

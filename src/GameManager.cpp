@@ -1,15 +1,24 @@
 #include "GameManager.h"
+
+#include "Tablero.h"
 #include <iostream>
 #include <thread>
 
-GameManager::GameManager() : renderOffsetX(30), renderOffsetY(5), DELTA(200), tab_("level1.txt"), competitorsSystem_(SINGLE_PLAYER, 3, tab_), menu_(), rnd() {
+GameManager::GameManager() : renderOffsetX(30), renderOffsetY(5), DELTA(200) {
     state_ = MENU_STATE;
     gameMode_ = SINGLE_PLAYER;
+    //competitorsSystem_ = new CompetitorsSystem(SINGLE_PLAYER, 3, tab_);
+}
+
+GameManager::~GameManager()
+{
+    delete tab_;
 }
 
 void GameManager::Start() {
     winner_ = NONE;
-    competitorsSystem_ = CompetitorsSystem(gameMode_, 3, tab_);
+    competitorsSystem_ = new CompetitorsSystem(gameMode_, 3, tab_);
+    tab_ = new Tablero("level1.txt");
     Update();
 }
 
@@ -24,28 +33,28 @@ void GameManager::setGameMode(GameMode gM) {
 void GameManager::Update() {
     state_ = PLAYING;
     while (state_ == PLAYING && gameMode_ != QUIT && winner_ == NONE) {
-        competitorsSystem_.Update(tab_, gameMode_);
-        tab_.Update(this, competitorsSystem_);
-        winner_ = competitorsSystem_.CheckCollisions(tab_, renderOffsetX, renderOffsetY);
+        competitorsSystem_->Update(tab_, gameMode_);
+        // Hacer método update del tablero? creo que no es necesario
+        //tab_->Update(this, competitorsSystem_);
+        winner_ = competitorsSystem_->CheckCollisions(tab_, renderOffsetX, renderOffsetY);
         Render();
         std::this_thread::sleep_for(std::chrono::milliseconds(DELTA));
     }
     ShowWinner();
-    Menu();
 }
 
 void GameManager::Render() {
     system("clear");
 
-    tab_.Render(renderOffsetX, renderOffsetY);
-    competitorsSystem_.render(renderOffsetX, renderOffsetY);
+    tab_->Render(renderOffsetX, renderOffsetY, false);
+    competitorsSystem_->render(renderOffsetX, renderOffsetY);
 
     std::cout << "\033[0m"; // Reset console colors
 }
 
 void GameManager::ShowWinner() {
     if (winner_ != NONE) {
-        std::cout << "\033[" << renderOffsetY - 1 << ";" << renderOffsetX + tab_.getWidth() - 5 << "H";
+        std::cout << "\033[" << renderOffsetY - 1 << ";" << renderOffsetX + tab_->getWidth() - 5 << "H";
         std::cout << "\033[30;47m"; // White text on black background
 
         switch (winner_) {
@@ -69,16 +78,16 @@ void GameManager::ShowWinner() {
     }
 }
 
-void GameManager::Menu() {
-    gameMode_ = menu_.Start();
+// void GameManager::Menu() {
+//     gameMode_ = menu_.Start();
 
-    if (gameMode_ == CREATE) {
-        menu_.CreateLevel(tab_, renderOffsetX, renderOffsetY);
-        Menu();
-    }
+//     if (gameMode_ == CREATE) {
+//         menu_.CreateLevel(tab_, renderOffsetX, renderOffsetY);
+//         Menu();
+//     }
 
-    std::string s = menu_.LevelMenu(tab_, gameMode_, renderOffsetX, renderOffsetY);
-    Start();
-}
+//     std::string s = menu_.LevelMenu(tab_, gameMode_, renderOffsetX, renderOffsetY);
+//     Start();
+// }
 
 

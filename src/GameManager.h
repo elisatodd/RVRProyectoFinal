@@ -9,6 +9,7 @@
 class GameManager {
 public:
     GameManager();
+    ~GameManager();
     void Start();
     GameMode getGameMode();
     void setGameMode(GameMode gM);
@@ -27,8 +28,6 @@ private:
 
     Tablero* tab_;
     CompetitorsSystem* competitorsSystem_;
-
-    std::random_device rnd;
 };
 
 #endif

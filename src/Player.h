@@ -18,7 +18,7 @@ class Player {
 public:
     Player(Coor c);
     void setControls(std::string u, std::string d, std::string r, std::string l);
-    void update(CompetitorsSystem* cS, Tablero& tab, char input, GameMode& gameMode);
+    void update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode);
     Coor getPlayerHead();
     bool collisionWithThisBody(Coor c);
     //void render(ConsoleColor color, int offsetX, int offsetY);

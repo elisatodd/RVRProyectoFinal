@@ -12,7 +12,7 @@ enum TipoCasilla {
 
 class Tablero {
 private:
-    TipoCasilla** tab;
+    std::vector<std::vector<TipoCasilla>> tab;
     Coor player1_IniPos;
     Coor player2_IniPos;
     std::default_random_engine rnd;
@@ -31,8 +31,8 @@ public:
     bool thereIsWall(Coor C);
     int getWidth() const;
     int getHeight() const;
-    Coor getPlayer1InitialPosition() const;
-    Coor getPlayer2InitialPosition() const;
+    Coor getPlayer1InitialPosition();
+    Coor getPlayer2InitialPosition();
 };
 
 #endif

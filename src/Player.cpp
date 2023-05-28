@@ -18,7 +18,7 @@ void Player::setControls(std::string u, std::string d, std::string r, std::strin
 }
 
 //Actualización de juego
-void Player::update(CompetitorsSystem* cS, Tablero& tab, char input, GameMode& gameMode) {
+void Player::update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode) {
     procesaInput(input, gameMode);
     player.InsertaFinal(player.nEsimo(player.CuentaEltos() - 1) + dir_);
 }
