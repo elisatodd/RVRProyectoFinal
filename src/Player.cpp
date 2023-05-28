@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "CompetitorsSystem.h"
+#include "Tablero.h"
+#include "GameManager.h"
 
 Player::Player(Coor c) {
     init_pos = c;
@@ -15,7 +18,7 @@ void Player::setControls(std::string u, std::string d, std::string r, std::strin
 }
 
 //Actualización de juego
-void Player::update(CompetitorsSystem& cS, Tablero& tab, char input, GameMode& gameMode) {
+void Player::update(CompetitorsSystem* cS, Tablero& tab, char input, GameMode& gameMode) {
     procesaInput(input, gameMode);
     player.InsertaFinal(player.nEsimo(player.CuentaEltos() - 1) + dir_);
 }
@@ -31,22 +34,22 @@ bool Player::collisionWithThisBody(Coor c) {
     return i != player.CuentaEltos() - 1;
 }
 
-void Player::render(ConsoleColor color, int offsetX, int offsetY) {
-    Coor c;
-    int i = 0;
-    std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-    std::cout << "  ";
+// void Player::render(ConsoleColor color, int offsetX, int offsetY) {
+//     Coor c;
+//     int i = 0;
+//     std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
+//     std::cout << "  ";
 
-    for (i = 0; i < Player.CuentaEltos() - 1; i++) {
-        c = Player.nEsimo(i);
-        std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-        std::cout << "  ";
-    }
+//     for (i = 0; i < Player.CuentaEltos() - 1; i++) {
+//         c = Player.nEsimo(i);
+//         std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
+//         std::cout << "  ";
+//     }
 
-    c = Player.nEsimo(i);
-    std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-    std::cout << "ºº";
-}
+//     c = Player.nEsimo(i);
+//     std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
+//     std::cout << "ºº";
+// }
 
 void Player::procesaInput(char c, GameMode& gameMode) {
     switch (c) {

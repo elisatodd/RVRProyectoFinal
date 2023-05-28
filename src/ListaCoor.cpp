@@ -1,5 +1,9 @@
 #include "ListaCoor.h"
 
+#include <fstream>      // Para std::ifstream
+#include <stdexcept>    // Para std::runtime_error
+
+
 ListaCoor::ListaCoor() : pri(nullptr) {}
 
 void ListaCoor::InsertaFinal(const Coor& e) {
@@ -35,7 +39,7 @@ ListaCoor::Nodo* ListaCoor::BuscaNodo(const Coor& e) const {
 
 void ListaCoor::BorraElto(const Coor& e) {
     if (pri == nullptr) {
-        throw std::exception("Error: Lista vacía");
+       throw std::runtime_error("Error: Lista vacía");
     }
     else if (pri->dato == e) {
         Nodo* temp = pri;
@@ -48,7 +52,7 @@ void ListaCoor::BorraElto(const Coor& e) {
             aux = aux->sig;
         }
         if (aux->sig == nullptr) {
-            throw std::exception("Error: Elemento no encontrado");
+            throw std::runtime_error("Error: Elemento no encontrado");
         }
         else {
             Nodo* temp = aux->sig;
@@ -60,7 +64,8 @@ void ListaCoor::BorraElto(const Coor& e) {
 
 ListaCoor::Nodo* ListaCoor::nEsimoNodo(int n) const {
     if (n < 0) {
-        throw std::exception("Error: Intentando acceder a un índice negativo");
+        throw std::runtime_error("Error: Intentando acceder a un índice negativo");
+        
     }
     else {
         Nodo* nEsimo = pri;
@@ -76,7 +81,7 @@ ListaCoor::Nodo* ListaCoor::nEsimoNodo(int n) const {
 Coor ListaCoor::nEsimo(int n) const {
     Nodo* aux = nEsimoNodo(n);
     if (aux == nullptr) {
-        throw std::exception("Índice fuera de los límites de la lista");
+        throw std::runtime_error("Error: Índice fuera de los límites de la lista");
     }
     else {
         return aux->dato;

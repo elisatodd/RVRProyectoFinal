@@ -3,10 +3,14 @@
 
 #include <vector>
 #include <string>
-#include "coor.h"
-#include "listacoor.h"
-#include "competitorsystem.h"
-#include "tablero.h"
+#include <random>
+
+#include "Coor.h"
+#include "ListaCoor.h"
+#include "EnumDefs.h"
+
+class Tablero;
+class CompetitorsSystem;
 
 enum Directions { UP = 0, DOWN, RIGHT, LEFT };
 
@@ -14,10 +18,10 @@ class Player {
 public:
     Player(Coor c);
     void setControls(std::string u, std::string d, std::string r, std::string l);
-    void update(CompetitorsSystem& cS, Tablero& tab, char input, GameMode& gameMode);
-    Coor getMotorbikeHead();
+    void update(CompetitorsSystem* cS, Tablero& tab, char input, GameMode& gameMode);
+    Coor getPlayerHead();
     bool collisionWithThisBody(Coor c);
-    void render(ConsoleColor color, int offsetX, int offsetY);
+    //void render(ConsoleColor color, int offsetX, int offsetY);
     void procesaInput(char c, GameMode& gameMode);
     void ChangeDir(Coor dir);
     void ResetPosition();

@@ -1,5 +1,8 @@
 #include "Tablero.h"
 
+#include <fstream> 
+#include <stdexcept>    
+
 Tablero::Tablero(const std::string& file) {
     GenerateTablero(file);
 }
@@ -11,10 +14,8 @@ Tablero::~Tablero() {
 void Tablero::GenerateTablero(const std::string& file) {
     std::ifstream f(file);
     if (!f.is_open()) {
-        throw std::runtime_error("Error: Could not open file");
+        throw std::runtime_error("No se encontró el fichero con el tablero");
     }
-
-    wH_ = nullptr;
 
     std::string line;
     std::string data;
@@ -61,7 +62,6 @@ void Tablero::GenerateTablero(const std::string& file) {
 
     std::random_device rd;
     rnd.seed(rd());
-    wormholeFrameTimer_ = rnd() % 10;
 }
 
 void Tablero::Render(int offsetX, int offsetY, bool renderInitPos = false) {
@@ -103,7 +103,7 @@ int Tablero::getWidth() const {
     return xLength;
 }
 
-int Tablero::getHight() const {
+int Tablero::getHeight() const {
     return yLength;
 }
 

@@ -3,13 +3,7 @@
 
 #include <vector>
 #include <random>
-
-struct Coor {
-    int x;
-    int y;
-
-    Coor(int x, int y) : x(x), y(y) {}
-};
+#include "Coor.h"
 
 enum TipoCasilla {
     FREE,
@@ -19,7 +13,6 @@ enum TipoCasilla {
 class Tablero {
 private:
     TipoCasilla** tab;
-    Wormhole* wH_;
     Coor player1_IniPos;
     Coor player2_IniPos;
     std::default_random_engine rnd;
@@ -28,16 +21,14 @@ private:
     int yLength = 0;
 
 public:
-    Tablero(int width, int height);
+    Tablero(const std::string& file);
     ~Tablero();
-    void Init();
-    void CreateWormhole();
-    void CheckWormholeCollision();
-    void DeleteWormholes();
+
+    void GenerateTablero(const std::string& file);
     void DeleteTablero();
+    void Render(int offsetX, int offsetY, bool renderInitPos);
 
-    bool ThereIsWall(Coor C);
-
+    bool thereIsWall(Coor C);
     int getWidth() const;
     int getHeight() const;
     Coor getPlayer1InitialPosition() const;
