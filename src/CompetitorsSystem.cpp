@@ -9,17 +9,17 @@ CompetitorsSystem::CompetitorsSystem(GameMode gM, int maxScores, Tablero* tab) {
     maxScore_ = maxScores;
     players.resize(2);
 
-    players[0]->player = new Player(tab->getPlayer1InitialPosition());
+    //players[0]->player = new Player(tab->getPlayer1InitialPosition());
     players[0]->player->setControls("W", "S", "D", "A");
     players[0]->points = 0;
 
     switch (gM) {
         case TWO_PLAYER:
-            players[1]->player =new Player(tab->getPlayer2InitialPosition());
+            //players[1]->player =new Player(tab->getPlayer2InitialPosition());
             break;
         case SINGLE_PLAYER:
         default:
-            players[1]->player = new Player(tab->getPlayer2InitialPosition());
+            //players[1]->player = new Player(tab->getPlayer2InitialPosition());
             break;
     }
     players[1]->player->setControls("W", "S", "D", "A");

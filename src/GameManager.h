@@ -10,9 +10,11 @@ class GameManager {
 public:
     GameManager();
     ~GameManager();
+
     void Start();
     GameMode getGameMode();
     void setGameMode(GameMode gM);
+    Tablero* getTablero();
 
 private:
     void Update();

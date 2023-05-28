@@ -30,6 +30,11 @@ void GameManager::setGameMode(GameMode gM) {
     gameMode_ = gM;
 }
 
+
+Tablero* GameManager::getTablero(){
+    return tab_;
+}
+
 void GameManager::Update() {
     state_ = PLAYING;
     while (state_ == PLAYING && gameMode_ != QUIT && winner_ == NONE) {
