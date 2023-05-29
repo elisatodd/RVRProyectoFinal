@@ -95,7 +95,7 @@ void TronClient::client_message_thread()
 		switch (server_recv_msg.m_type)
 		{
 		case MessageServer::ServerMessageType::UPDATE_STATE:
-			nextState = server_recv_msg.state;
+			nextState = server_recv_msg.m_state;
 			break;
 		case MessageServer::ServerMessageType::UPDATE_INFO:
 			updateGOsInfo(&server_recv_msg);
