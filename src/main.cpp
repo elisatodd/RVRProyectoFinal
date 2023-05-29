@@ -1,6 +1,9 @@
 #include <iostream>
+#include "GameUtils/GameManager.h"
 
 int main(){
-    std::cout << "main\ns";
+    GameManager* gM = new GameManager();
+    gM->Start();
+    delete gM;
     return 0;
 }

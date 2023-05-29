@@ -17,8 +17,9 @@ GameManager::~GameManager()
 
 void GameManager::Start() {
     winner_ = NONE;
+    tab_ = new Tablero("assets/levels/level1.txt");
+    std::cout << "depuration2\n";
     competitorsSystem_ = new CompetitorsSystem(gameMode_, 3, tab_);
-    tab_ = new Tablero("level1.txt");
     Update();
 }
 
@@ -49,12 +50,13 @@ void GameManager::Update() {
 }
 
 void GameManager::Render() {
-    system("clear");
+    // system("clear");
 
-    tab_->Render(renderOffsetX, renderOffsetY, false);
-    competitorsSystem_->render(renderOffsetX, renderOffsetY);
+    // tab_->Render(renderOffsetX, renderOffsetY, false);
+    // competitorsSystem_->render(renderOffsetX, renderOffsetY);
 
-    std::cout << "\033[0m"; // Reset console colors
+    // std::cout << "\033[0m"; // Reset console colors
+    std::cout << "render\n";
 }
 
 void GameManager::ShowWinner() {
