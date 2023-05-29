@@ -6,5 +6,9 @@ enum State { MENU_STATE, PLAYING };
 enum Winner { NONE = 0, PLAYER1, PLAYER2 };
 enum CollisionState { NONE_COLLIDED, PLAYER1_COLLIDED, PLAYER2_COLLIDED, BOTH_COLLIDED };
 enum InputState { NO_PROCESSED, PLAYER1_PROCESSED, PLAYER2_PROCESSED, BOTH_PROCESSED };
+enum TipoCasilla {
+    FREE,
+    WALL
+};
 
 #endif

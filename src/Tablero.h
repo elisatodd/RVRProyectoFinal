@@ -4,11 +4,7 @@
 #include <vector>
 #include <random>
 #include "Coor.h"
-
-enum TipoCasilla {
-    FREE,
-    WALL
-};
+#include "EnumDefs.h"
 
 class Tablero {
 private:
@@ -31,8 +27,8 @@ public:
     bool thereIsWall(Coor C);
     int getWidth() const;
     int getHeight() const;
-    Coor getPlayer1InitialPosition();
-    Coor getPlayer2InitialPosition();
+    Coor getPlayerOneInitialPosition() const;
+    Coor getPlayerTwoInitialPosition() const;
 };
 
 #endif

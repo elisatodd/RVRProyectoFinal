@@ -105,10 +105,10 @@ int Tablero::getHeight() const {
     return yLength;
 }
 
-Coor Tablero::getPlayer1InitialPosition() const {
+Coor Tablero::getPlayerOneInitialPosition() const {
     return player1_IniPos;
 }
 
-Coor Tablero::getPlayer2InitialPosition() const {
+Coor Tablero::getPlayerTwoInitialPosition() const {
     return player2_IniPos;
 }
