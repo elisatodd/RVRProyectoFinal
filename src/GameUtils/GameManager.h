@@ -5,11 +5,20 @@
 #include "CompetitorsSystem.h"
 
 #include "EnumDefs.h"
+#include "../SDLUtils/Singleton.h"
 
-class GameManager {
+class GameManager : public Singleton<GameManager>{
+
+	friend Singleton<GameManager>;
+
 public:
     GameManager();
-    ~GameManager();
+    virtual ~GameManager();
+
+    GameManager(GameManager&) = delete;
+	GameManager(GameManager&&) = delete;
+	GameManager& operator=(GameManager&) = delete;
+	GameManager& operator=(GameManager&&) = delete;
 
     void Start();
     GameMode getGameMode();
@@ -31,5 +40,8 @@ private:
     Tablero* tab_;
     CompetitorsSystem* competitorsSystem_;
 };
+inline GameManager& GameManager() {
+	return *GameManager::instance();
+}
 
 #endif
