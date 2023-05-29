@@ -43,20 +43,9 @@ void GameManager::Update() {
         // Hacer método update del tablero? creo que no es necesario
         //tab_->Update(this, competitorsSystem_);
         winner_ = competitorsSystem_->CheckCollisions(tab_, renderOffsetX, renderOffsetY);
-        Render();
         std::this_thread::sleep_for(std::chrono::milliseconds(DELTA));
     }
     ShowWinner();
-}
-
-void GameManager::Render() {
-    // system("clear");
-
-    // tab_->Render(renderOffsetX, renderOffsetY, false);
-    // competitorsSystem_->render(renderOffsetX, renderOffsetY);
-
-    // std::cout << "\033[0m"; // Reset console colors
-    std::cout << "render\n";
 }
 
 void GameManager::ShowWinner() {

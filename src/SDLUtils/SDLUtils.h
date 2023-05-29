@@ -5,11 +5,39 @@
 
 #include <SDL2/SDL.h>
 
+#include "Vector2D.h"
+
 /*
  * This file includes some SDL related methods/macros, nothing sophisticated, just
  * shortcuts for lengthy instructions
  */
+/*
+ * build_sdlrect(x,y,w,h)
+ *
+ * it is used to create a SDL_Rect from the parameters casting them
+ * to integer (since we use floating point numbers for dimension,
+ * position, velocity, etc.)
+ */
 
+inline SDL_Rect build_sdlrect(Vector2D &pos, float w, float h) {
+	return
+	{
+		static_cast<int>(pos.getX()),
+		static_cast<int>(pos.getY()),
+		static_cast<int>(w),
+		static_cast<int>(h)
+	};
+}
+
+inline SDL_Rect build_sdlrect(float x, float y, float w, float h) {
+	return
+	{
+		static_cast<int>(x),
+		static_cast<int>(y),
+		static_cast<int>(w),
+		static_cast<int>(h)
+	};
+}
 /*
  * COLOR(hexnum)
  *

@@ -3,12 +3,11 @@
 #include "SDLUtils/Window.h"
 
 int main(){
-    // GameManager* gM = new GameManager();
-    // gM->Start();
 
     GameManager::init();
     Window::init("TRON", 900, 700);
 
-    //delete gM;
+    GameManager().Start();
+
     return 0;
 }

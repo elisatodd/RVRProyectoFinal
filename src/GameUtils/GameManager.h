@@ -27,7 +27,6 @@ public:
 
 private:
     void Update();
-    void Render();
     void ShowWinner();
 
     State state_;
