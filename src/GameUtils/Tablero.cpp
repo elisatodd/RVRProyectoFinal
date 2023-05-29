@@ -2,6 +2,7 @@
 
 #include <fstream> 
 #include <stdexcept>    
+#include <iostream>
 
 Tablero::Tablero(const std::string& file) {
     GenerateTablero(file);
@@ -33,7 +34,7 @@ void Tablero::GenerateTablero(const std::string& file) {
     // for (int i = 0; i < xLength; i++) {
     //     tab[i] = new TipoCasilla[yLength];
     // }
-
+    tab.resize(xLength, std::vector<TipoCasilla>(yLength));
     int cont = 0;
 
     for (int i = 0; i < yLength; i++) {
@@ -60,9 +61,6 @@ void Tablero::GenerateTablero(const std::string& file) {
                 cont++;
         }
     }
-
-    std::random_device rd;
-    rnd.seed(rd());
 }
 
 void Tablero::Render(int offsetX, int offsetY, bool renderInitPos = false) {

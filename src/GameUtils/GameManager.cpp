@@ -18,8 +18,8 @@ GameManager::~GameManager()
 void GameManager::Start() {
     winner_ = NONE;
     tab_ = new Tablero("assets/levels/level1.txt");
-    std::cout << "depuration2\n";
     competitorsSystem_ = new CompetitorsSystem(gameMode_, 3, tab_);
+    std::cout << "depuration2\n";
     Update();
 }
 

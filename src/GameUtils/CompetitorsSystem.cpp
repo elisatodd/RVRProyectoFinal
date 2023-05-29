@@ -8,20 +8,23 @@
 CompetitorsSystem::CompetitorsSystem(GameMode gM, int maxScores, Tablero* tab) {
     maxScore_ = maxScores;
     players.resize(2);
-
-    //players[0]->player = new Player(tab->getPlayer1InitialPosition());
+    players[0] = new Competitor();
+    players[0]->player = new Player(tab->getPlayerOneInitialPosition());
+    std::cout << "depurationSeves\n";
     players[0]->player->setControls("W", "S", "D", "A");
     players[0]->points = 0;
 
-    switch (gM) {
-        case TWO_PLAYER:
-            //players[1]->player =new Player(tab->getPlayer2InitialPosition());
-            break;
-        case SINGLE_PLAYER:
-        default:
-            //players[1]->player = new Player(tab->getPlayer2InitialPosition());
-            break;
-    }
+    // switch (gM) {
+    //     case TWO_PLAYER:
+    //         players[1]->player =new Player(tab->getPlayerTwoInitialPosition());
+    //         break;
+    //     case SINGLE_PLAYER:
+    //     default:
+    //         players[1]->player = new Player(tab->getPlayerTwoInitialPosition());
+    //         break;
+    // }
+    players[1] = new Competitor();
+    players[1]->player = new Player(tab->getPlayerTwoInitialPosition());
     players[1]->player->setControls("W", "S", "D", "A");
     players[1]->points = 0;
 
