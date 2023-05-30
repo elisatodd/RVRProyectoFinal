@@ -7,3 +7,4 @@ sleep 1.5
 
 # open clients
 ./TronClient.out 127.0.0.1 2600 &
+./TronClient.out 127.0.0.1 2600 &

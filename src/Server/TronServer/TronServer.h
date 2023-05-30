@@ -17,7 +17,6 @@
 class TronServer {
 public:
     TronServer(const char* s, const char* p);
-    virtual ~TronServer();
 
     // net messages handler
     void server_message_thread();

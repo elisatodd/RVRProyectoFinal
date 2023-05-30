@@ -1,13 +1,17 @@
 #include <iostream>
+#include <thread>
+
 #include "TronServer/TronServer.h"
 
 void initGame(char **argv){
 
     TronServer server(argv[1], argv[2]);
-    //client.init(900, 700);
 
+    std::thread([&server](){
+        server.server_message_thread();
+    }).detach();
+    
     server.run();
-
     //client.shutdown();
 }
 
@@ -35,7 +39,7 @@ int main(int argc, char *argv[]){
     {
         std::cerr << "Caught an unknown exception ...\n";
     }
-    std::cout << "server\n";
+    std::cout << "Closing server\n";
     
     return 0;
 }

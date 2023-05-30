@@ -97,6 +97,7 @@ void TronServer::run()
             // Both players are ready and server is also ready --> game can start
             m_state = MessageServer::ServerState::PLAYING;
             m_p1_ready = m_p2_ready = false;
+            std::cout << "[Server]: BothPlayersReady\n";
             sendStateMessage();
         }
 
@@ -171,6 +172,7 @@ void TronServer::handleInput()
         m_dir_p1 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
+        std::cout << "[Server]p2  ready\n";
         m_p1_ready = true;
     break;
     }
@@ -191,6 +193,7 @@ void TronServer::handleInput()
         m_dir_p2 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
+        std::cout << "[Server]: p2 ready\n";
         m_p2_ready = true;
     break;
     }
@@ -287,7 +290,7 @@ void TronServer::updateInfoClients()
 void TronServer::sendStateMessage()
 {
     MessageServer msg(m_state);
-    msg.m_type = MessageServer::ServerMessageType::UPDATE_STATE;
+    msg.m_type = MessageServer::ServerMessageType ::UPDATE_STATE;
 
     // if(state == MessageServer::ServerState::GAME_OVER)
     //     msg.playerOneHasWon = life_t2 == 0;

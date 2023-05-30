@@ -19,7 +19,14 @@ void TronClient::init(int w, int h)
 	data.size = Vector2D(PLAYER_SIZE, PLAYER_SIZE);
     data.position = Vector2D(0, 0);
 
+	// init connection
+	std::thread([this]()
+		{ client_message_thread(); }).detach();
+	
 	changeState(currentState);
+
+	sendMatchMessage(MessageClient::ClientMessageType::REGISTER, &data);
+	std::cout << "Trying to log...\n";
 }
 
 void TronClient::run()
