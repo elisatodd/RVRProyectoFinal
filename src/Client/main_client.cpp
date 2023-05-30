@@ -1,7 +1,7 @@
 #include <iostream>
 #include "GameUtils/GameManager.h"
-#include "SDLUtils/Window.h"
-#include "Client/TronClient.h"
+#include "../SDLUtils/Window.h"
+#include "TronClient.h"
 
 void initGame(char **argv){
 
@@ -37,6 +37,6 @@ int main(int argc, char *argv[]){
     {
         std::cerr << "Caught an unknown exception ...\n";
     }
-    
+    std::cout << "Salida\n";
     return 0;
 }

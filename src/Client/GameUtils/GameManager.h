@@ -5,7 +5,7 @@
 #include "CompetitorsSystem.h"
 
 #include "EnumDefs.h"
-#include "../SDLUtils/Singleton.h"
+#include "../../SDLUtils/Singleton.h"
 
 class GameManager : public Singleton<GameManager>{
 

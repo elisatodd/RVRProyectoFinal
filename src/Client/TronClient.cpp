@@ -3,7 +3,7 @@
 #include "../SDLUtils/SDLUtils.h"
 #include "../SDLUtils/Window.h"
 #include "../SDLUtils/GameObject.h"
-#include "../GameUtils/GameManager.h"
+#include "GameUtils/GameManager.h"
 
 TronClient::TronClient(const char *s, const char *p) : client_socket(s, p)
 {};

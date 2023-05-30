@@ -1,7 +1,6 @@
 game:
-	# make -f client.mk
-	# make -f server.mk
-	make -f game.mk
+	make -f client.mk
+	make -f server.mk
 
 clean:
 	make clean -f client.mk
