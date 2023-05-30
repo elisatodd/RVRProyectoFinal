@@ -27,6 +27,7 @@ void TronClient::init(int w, int h)
 
 	sendMatchMessage(MessageClient::ClientMessageType::REGISTER, &data);
 	std::cout << "Trying to log...\n";
+
 }
 
 void TronClient::run()
@@ -72,9 +73,10 @@ void TronClient::run()
 		Window().clearRenderer({0, 0, 0});
 
 		// render
-		for (auto &o : objs_)
+		for (auto &o : objs_){
 			if (o->isEnabled())
 				o->render();
+		}
 
 		Window().presentRenderer();
 
@@ -140,18 +142,23 @@ void TronClient::checkState()
 
 void TronClient::changeState(const MessageServer::ServerState state)
 {
+	std::cout << "Estado cambiado: objetos" <<objs_.size() <<"\n";
+
 	clearGameObjects();
+	std::cout << objs_.size() <<"\n";
 
 	switch (state)
 	{
 	case MessageServer::ServerState::WAITING:
 	{
 		std::cout << "Waiting...";
+		loadBackground("./assets/images/MenuWaiting.png");
 		break;
 	}
 	case MessageServer::ServerState::READY:
 	{
 		std::cout << "Ready to play.";
+		loadBackground("./assets/images/MenuReady.png");
 		break;
 	}
 	case MessageServer::ServerState::PLAYING:
@@ -169,12 +176,13 @@ void TronClient::changeState(const MessageServer::ServerState state)
 
 void TronClient::loadBackground(const std::string &textFile)
 {
-    GameObject* bg = new GameObject();
+	GameObject* bg = new GameObject();
 	bg->setTransform(0, 0);
 	bg->setSize(Window().width(), Window().height());
 	bg->setTexture(textFile);
-
+	bg->setEnabled(true);
 	objs_.push_back(bg);
+
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)
