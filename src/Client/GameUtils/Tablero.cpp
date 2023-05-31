@@ -12,6 +12,7 @@
 Tablero::Tablero(const std::string& file) {
     GenerateTablero(file);
     setTexture("./assets/images/Obstacle.png");
+    OBSTACLE_SIZE = GameManager::instance()->BOX_WIDTH;
 }
 
 Tablero::~Tablero() {

@@ -30,9 +30,9 @@ public:
 
     Vector2D coorToRenderPos(Coor c);
 
-    const int BOX_WIDTH = 10;
-    const int RENDER_OFFSET_X = 200;
-    const int RENDER_OFFSET_Y = 250;
+    const int BOX_WIDTH = 14;
+    const int RENDER_OFFSET_X = 190;
+    const int RENDER_OFFSET_Y = 180;
 
 private:
     void ShowWinner();

@@ -9,8 +9,6 @@
 #include "Coor.h"
 #include "EnumDefs.h"
 
-#define OBSTACLE_SIZE 10
-
 class Tablero : public GameObject {
 private:
     std::vector<std::vector<TipoCasilla>> tab;
@@ -20,7 +18,7 @@ private:
 
     int xLength = 0;
     int yLength = 0;
-
+    int OBSTACLE_SIZE = 10;
 public:
     Tablero(const std::string& file);
     ~Tablero();
