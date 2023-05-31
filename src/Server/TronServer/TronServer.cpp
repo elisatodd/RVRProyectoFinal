@@ -127,8 +127,8 @@ void TronServer::run()
 void TronServer::reset()
 {
     m_input_t1 = m_input_t2 = MessageClient::InputType::NONE;
-    m_pos_p1 = Vector2D(200, 360); // default positions
-    m_pos_p2 = Vector2D(800, 360);
+    // m_pos_p1 = Vector2D(200, 360); // default positions
+    // m_pos_p2 = Vector2D(800, 360);
 
     m_p1_hit = false;
     m_p2_hit = false;

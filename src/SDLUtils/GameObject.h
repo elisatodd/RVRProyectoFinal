@@ -7,6 +7,7 @@
 
 #include "Vector2D.h"
 
+
 class GameObject {
 public:
 	GameObject() : m_transform(), m_size(), m_rotation(0), m_texture(nullptr), m_texture_size() {
@@ -53,7 +54,7 @@ protected:
 	SDL_Texture* m_texture;
 	Vector2D m_texture_size;
     
-	void render(const SDL_Rect &src, const SDL_Rect &dest,
+	void Render(const SDL_Rect &src, const SDL_Rect &dest,
             const SDL_Point *p = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 };
 #endif

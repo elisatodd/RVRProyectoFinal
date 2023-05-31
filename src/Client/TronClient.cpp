@@ -125,7 +125,7 @@ void TronClient::updateGOsInfo(MessageServer *msg)
 {
 	if (currentState == MessageServer::ServerState::PLAYING)
 	{
-		// actualizar posición de los jugadores
+		// TO DO: actualizar posición de los jugadores, tal vez sea necesario actualizar la direccion que lleva
 		if (m_player_1 != nullptr) m_player_1->setTransform(msg->m_pos_p1);
 		if (m_player_2 != nullptr) m_player_2->setTransform(msg->m_pos_p2);
 	}
@@ -198,22 +198,22 @@ void TronClient::loadGame(){
 	GameManager::instance()->Start();
 	Coor p1_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_1 = new Player(p1_coor);
-	m_player_1->setTransform(200, Window().height() / 2);
+	//m_player_1->setTransform(200, Window().height() / 2);
 	m_player_1->setSize(PLAYER_SIZE, PLAYER_SIZE);
 	m_player_1->setTexture("./assets/images/Player1.png");
 	
 	objs_.push_back(m_player_1);
 
-	Coor p2_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
+	Coor p2_coor = GameManager::instance()->getTablero()->getPlayerTwoInitialPosition();
 	m_player_2 = new Player(p2_coor);
-	m_player_2->setTransform(800, Window().height() / 2);
+	//m_player_2->setTransform(800, Window().height() / 2);
 	m_player_2->setSize(PLAYER_SIZE, PLAYER_SIZE);
 	m_player_2->setTexture("./assets/images/Player2.png");
 	
 	objs_.push_back(m_player_2);
 
-	std::cout << "Pos p1: " << p1_coor << "\n";
-	std::cout << "Pos p2: " << p2_coor << "\n";
+	std::cout << "Pos p1: " << m_player_1->getPlayerHead() << "\n";
+	std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)

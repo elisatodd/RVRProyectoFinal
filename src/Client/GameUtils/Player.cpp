@@ -2,6 +2,12 @@
 #include "CompetitorsSystem.h"
 #include "Tablero.h"
 #include "GameManager.h"
+#include <iostream>
+
+#include <../../SDL2/SDL_image.h>
+#include "../../SDLUtils/Window.h"
+#include "../../SDLUtils/SDLUtils.h"
+#include "../../SDLUtils/Vector2D.h"
 
 Player::Player(Coor c) {
     init_pos = c;
@@ -31,6 +37,11 @@ Coor Player::getPlayerHead() {
     return player.nEsimo(player.CuentaEltos() - 1);
 }
 
+void Player::setPlayerHead(Coor c)
+{
+    player.nEsimo(player.CuentaEltos() - 1) = c;
+}
+
 bool Player::collisionWithThisBody(Coor c) {
     int i = 0;
     while (i < player.CuentaEltos() - 1 && c != player.nEsimo(i))
@@ -38,22 +49,21 @@ bool Player::collisionWithThisBody(Coor c) {
     return i != player.CuentaEltos() - 1;
 }
 
-// void Player::render(ConsoleColor color, int offsetX, int offsetY) {
-//     Coor c;
-//     int i = 0;
-//     std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-//     std::cout << "  ";
+void Player::render(){
+    std::cout << "Pos rumax:" << "\n";
+    
+    assert(m_texture != nullptr);
+    Vector2D renderPosition;
+    //Posicion relativa de renderizado
+    renderPosition.setX(GameManager::instance()->RENDER_OFFSET_X + (getPlayerHead().x * GameManager::instance()->BOX_WIDTH));
+    renderPosition.setY(GameManager::instance()->RENDER_OFFSET_Y + (getPlayerHead().y * GameManager::instance()->BOX_WIDTH));
 
-//     for (i = 0; i < Player.CuentaEltos() - 1; i++) {
-//         c = Player.nEsimo(i);
-//         std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-//         std::cout << "  ";
-//     }
+    SDL_Rect src = build_sdlrect(0, 0, m_texture_size.getX(), m_texture_size.getY());
+    SDL_Rect dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
+    Render(src, dest);
 
-//     c = Player.nEsimo(i);
-//     std::cout << "\033[" << offsetY + c.y << ";" << offsetX + c.x * 2 << "H";
-//     std::cout << "ºº";
-// }
+    std::cout << "Pos render:" << renderPosition << "\n";
+}
 
 void Player::procesaInput(char c, GameMode& gameMode) {
     switch (c) {

@@ -57,10 +57,10 @@ void GameObject::render()
 
     SDL_Rect src = build_sdlrect(0, 0, m_texture_size.getX(), m_texture_size.getY());
     SDL_Rect dest = build_sdlrect(m_transform, m_size.getX(), m_size.getY());
-    render(src, dest);
+    Render(src, dest);
 }
 
-void GameObject::render(const SDL_Rect &src, const SDL_Rect &dest,
+void GameObject::Render(const SDL_Rect &src, const SDL_Rect &dest,
                 const SDL_Point *p, SDL_RendererFlip flip)
 {
     SDL_RenderCopyEx(Window().renderer(), m_texture, &src, &dest, m_rotation, p, flip);

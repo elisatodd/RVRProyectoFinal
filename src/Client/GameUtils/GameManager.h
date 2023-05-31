@@ -26,6 +26,10 @@ public:
     void setGameMode(GameMode gM);
     Tablero* getTablero();
 
+    const int BOX_WIDTH = 10;
+    const int RENDER_OFFSET_X = 200;
+    const int RENDER_OFFSET_Y = 250;
+
 private:
     void ShowWinner();
 

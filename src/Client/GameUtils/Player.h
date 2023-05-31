@@ -25,8 +25,10 @@ public:
     void setControls(std::string u, std::string d, std::string r, std::string l);
     void update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode);
     Coor getPlayerHead();
+    void setPlayerHead(Coor c);
     bool collisionWithThisBody(Coor c);
-    //void render(ConsoleColor color, int offsetX, int offsetY);
+
+    virtual void render() override;
     void procesaInput(char c, GameMode& gameMode);
     void ChangeDir(Coor dir);
     void ResetPosition();
