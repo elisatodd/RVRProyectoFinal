@@ -48,7 +48,7 @@ void TronClient::run()
 				continue;
 			}
 
-			if ((event.type == SDL_KEYDOWN && currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_RETURN))
+			if ((event.type == SDL_KEYDOWN && currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_SPACE))
 			{
 				std::cout << "Start Game\n";
 				sendGameMessage(MessageClient::InputType::PLAY);
@@ -168,7 +168,7 @@ void TronClient::changeState(const MessageServer::ServerState state)
 		std::cout << "Playing...";
 		loadBackground("./assets/images/GameWithBoard.png");
 		// load game elements: players and score
-		// loadGame();
+		loadGame();
 		break;
 	case MessageServer::ServerState::GAME_OVER:
 	{
