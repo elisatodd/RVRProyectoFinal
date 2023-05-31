@@ -63,7 +63,7 @@ void Tablero::GenerateTablero(const std::string& file) {
     }
 }
 
-void Tablero::Render(int offsetX, int offsetY, bool renderInitPos = false) {
+void Tablero::Render() {
     // for (int i = 0; i < getWidth(); i++) {
     //     for (int j = 0; j < getHight(); j++) {
     //         Console::SetCursorPosition((i * 2) + offsetX, j + offsetY);

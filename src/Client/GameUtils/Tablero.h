@@ -22,7 +22,7 @@ public:
 
     void GenerateTablero(const std::string& file);
     void DeleteTablero();
-    void Render(int offsetX, int offsetY, bool renderInitPos);
+    void Render();
 
     bool thereIsWall(Coor C);
     int getWidth() const;

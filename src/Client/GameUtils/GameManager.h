@@ -6,6 +6,8 @@
 
 #include "EnumDefs.h"
 #include "../../SDLUtils/Singleton.h"
+#include "../../SDLUtils/Vector2D.h"
+#include "Coor.h"
 
 class GameManager : public Singleton<GameManager>{
 
@@ -25,6 +27,8 @@ public:
     GameMode getGameMode();
     void setGameMode(GameMode gM);
     Tablero* getTablero();
+
+    Vector2D coorToRenderPos(Coor c);
 
     const int BOX_WIDTH = 10;
     const int RENDER_OFFSET_X = 200;

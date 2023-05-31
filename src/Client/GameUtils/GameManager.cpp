@@ -36,6 +36,14 @@ Tablero* GameManager::getTablero(){
     return tab_;
 }
 
+Vector2D GameManager::coorToRenderPos(Coor c){
+    Vector2D renderPosition;
+    renderPosition.setX(RENDER_OFFSET_X + (c.x * BOX_WIDTH));
+    renderPosition.setY(RENDER_OFFSET_Y + (c.y * BOX_WIDTH));
+    return renderPosition;
+}
+
+
 void GameManager::Update() {
     state_ = PLAYING;
     while (state_ == PLAYING && gameMode_ != QUIT && winner_ == NONE) {
