@@ -67,6 +67,7 @@ void TronClient::run()
 			for (auto &o : objs_)
 				if (o->isEnabled())
 					o->handleInput(event);
+			
 		}
 
 		if (currentState == MessageServer::ServerState::SERVER_QUIT)

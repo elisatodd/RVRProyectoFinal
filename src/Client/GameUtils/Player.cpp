@@ -53,12 +53,17 @@ void Player::render(){
     
     assert(m_texture != nullptr);
     Vector2D renderPosition = GameManager::instance()->coorToRenderPos(getPlayerHead());
-
     SDL_Rect src = build_sdlrect(0, 0, m_texture_size.getX(), m_texture_size.getY());
-    SDL_Rect dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
+    SDL_Rect dest;
+    
+    for(int i = 0; i < player.CuentaEltos(); i++){
+        Vector2D renderPos = GameManager().coorToRenderPos(player.nEsimo(i));
+        dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
+        Render(src, dest);
+    }
+
+    dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
     Render(src, dest);
-
-
 }
 
 void Player::procesaInput(char c, GameMode& gameMode) {
