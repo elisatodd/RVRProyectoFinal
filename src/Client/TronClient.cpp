@@ -194,8 +194,16 @@ void TronClient::loadBackground(const std::string &textFile)
 
 void TronClient::loadGame(){
 
+	GameManager().Start();
+	Tablero* tablero = GameManager().getTablero();
+
+	if (tablero != nullptr){
+		objs_.push_back(tablero);
+	}else{
+		std::cout << "El tablero no existe\n";
+	}
+
 	// Add both players with initial position and size
-	GameManager::instance()->Start();
 	Coor p1_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_1 = new Player(p1_coor);
 	//m_player_1->setTransform(200, Window().height() / 2);

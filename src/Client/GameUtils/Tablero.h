@@ -3,10 +3,15 @@
 
 #include <vector>
 #include <random>
+
+#include "../../SDLUtils/GameObject.h"
+
 #include "Coor.h"
 #include "EnumDefs.h"
 
-class Tablero {
+#define OBSTACLE_SIZE 10
+
+class Tablero : public GameObject {
 private:
     std::vector<std::vector<TipoCasilla>> tab;
     Coor player1_IniPos;
@@ -22,7 +27,9 @@ public:
 
     void GenerateTablero(const std::string& file);
     void DeleteTablero();
-    void Render();
+    //void Render();
+
+    void render() override;
 
     bool thereIsWall(Coor C);
     int getWidth() const;
