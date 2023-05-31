@@ -23,7 +23,7 @@ public:
     void handleInput(const SDL_Event &) override;
 
     void setControls(std::string u, std::string d, std::string r, std::string l);
-    void update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode);
+    void playerUpdate();
     Coor getPlayerHead();
     void setPlayerHead(Coor c);
     bool collisionWithThisBody(Coor c);

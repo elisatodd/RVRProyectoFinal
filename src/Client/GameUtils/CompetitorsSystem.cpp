@@ -94,7 +94,7 @@ void CompetitorsSystem::showPoints(int offsetX) {
 void CompetitorsSystem::Update(Tablero* tab, GameMode& gameMode) {
     std::vector<char> c = getInput2(gameMode);
     for (int i = 0; i < players.size(); i++) {
-        players[i]->player->update(this, tab, c[i], gameMode);
+        //players[i]->player->update(this, tab, c[i], gameMode);
     }
 }
 

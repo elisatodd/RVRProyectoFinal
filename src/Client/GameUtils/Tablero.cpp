@@ -95,7 +95,6 @@ void Tablero::GenerateTablero(const std::string& file) {
 // }
 
 void Tablero::render() {
-    std::cout << "Dibujando tablero\n";
 
     int screenWidth = Window().width();
     int screenHeight = Window().height();

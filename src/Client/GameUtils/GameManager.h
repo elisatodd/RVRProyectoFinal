@@ -9,6 +9,7 @@
 #include "../../SDLUtils/Vector2D.h"
 #include "Coor.h"
 
+class Player;
 class GameManager : public Singleton<GameManager>{
 
 	friend Singleton<GameManager>;

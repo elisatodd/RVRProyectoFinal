@@ -43,43 +43,42 @@ Vector2D GameManager::coorToRenderPos(Coor c){
     return renderPosition;
 }
 
-
 void GameManager::Update() {
-    state_ = PLAYING;
-    while (state_ == PLAYING && gameMode_ != QUIT && winner_ == NONE) {
-        competitorsSystem_->Update(tab_, gameMode_);
-        // Hacer método update del tablero? creo que no es necesario
-        //tab_->Update(this, competitorsSystem_);
-        winner_ = competitorsSystem_->CheckCollisions(tab_, renderOffsetX, renderOffsetY);
-        std::this_thread::sleep_for(std::chrono::milliseconds(DELTA));
-    }
-    ShowWinner();
+
+    //competitorsSystem_->Update(tab_, gameMode_);
+    // Hacer método update del tablero? creo que no es necesario
+    //tab_->Update(this, competitorsSystem_);
+    // winner_ = competitorsSystem_->CheckCollisions(tab_, renderOffsetX, renderOffsetY);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(DELTA));
+    
+    // ShowWinner();
 }
 
 void GameManager::ShowWinner() {
-    if (winner_ != NONE) {
-        std::cout << "\033[" << renderOffsetY - 1 << ";" << renderOffsetX + tab_->getWidth() - 5 << "H";
-        std::cout << "\033[30;47m"; // White text on black background
+    // if (winner_ != NONE) {
+    //     std::cout << "\033[" << renderOffsetY - 1 << ";" << renderOffsetX + tab_->getWidth() - 5 << "H";
+    //     std::cout << "\033[30;47m"; // White text on black background
 
-        switch (winner_) {
-            case PLAYER1:
-            case PLAYER2:
-                std::cout << "Player ";
-                std::cout << "\033[" << 30 + (winner_ - 1) << "m"; // Set player color
-                std::cout << "ºº";
-                std::cout << "\033[0m"; // Reset console colors
-                std::cout << " winner";
-                break;
-            case NONE:
-            default:
-                break;
-        }
+    //     switch (winner_) {
+    //         case PLAYER1:
+    //         case PLAYER2:
+    //             std::cout << "Player ";
+    //             std::cout << "\033[" << 30 + (winner_ - 1) << "m"; // Set player color
+    //             std::cout << "ºº";
+    //             std::cout << "\033[0m"; // Reset console colors
+    //             std::cout << " winner";
+    //             break;
+    //         case NONE:
+    //         default:
+    //             break;
+    //     }
 
-        std::cout << "\033[0m"; // Reset console colors
-        std::cout << "\033[0;0H";
+    //     std::cout << "\033[0m"; // Reset console colors
+    //     std::cout << "\033[0;0H";
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-    }
+    //     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    // }
+     std::cout << "Tenemos ganador\n";
 }
 
 // void GameManager::Menu() {

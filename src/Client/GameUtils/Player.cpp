@@ -28,8 +28,8 @@ void Player::handleInput(const SDL_Event &e) {
 }
 
 //Actualización de juego
-void Player::update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode) {
-    procesaInput(input, gameMode);
+void Player::playerUpdate() {
+    //procesaInput(input, gameMode);
     player.InsertaFinal(player.nEsimo(player.CuentaEltos() - 1) + dir_);
 }
 

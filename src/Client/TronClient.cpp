@@ -58,6 +58,12 @@ void TronClient::run()
 				continue;
 			}
 
+			if(currentState == MessageServer::ServerState::PLAYING)
+			{
+				m_player_1->playerUpdate();
+				m_player_2->playerUpdate();
+			}
+
 			for (auto &o : objs_)
 				if (o->isEnabled())
 					o->handleInput(event);
@@ -207,7 +213,7 @@ void TronClient::loadGame(){
 	Coor p1_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_1 = new Player(p1_coor);
 	//m_player_1->setTransform(200, Window().height() / 2);
-	m_player_1->setSize(PLAYER_SIZE, PLAYER_SIZE);
+	m_player_1->setSize(GameManager::instance()->BOX_WIDTH, GameManager::instance()->BOX_WIDTH);
 	m_player_1->setTexture("./assets/images/Player1.png");
 	
 	objs_.push_back(m_player_1);
@@ -215,7 +221,7 @@ void TronClient::loadGame(){
 	Coor p2_coor = GameManager::instance()->getTablero()->getPlayerTwoInitialPosition();
 	m_player_2 = new Player(p2_coor);
 	//m_player_2->setTransform(800, Window().height() / 2);
-	m_player_2->setSize(PLAYER_SIZE, PLAYER_SIZE);
+	m_player_2->setSize(GameManager::instance()->BOX_WIDTH, GameManager::instance()->BOX_WIDTH);
 	m_player_2->setTexture("./assets/images/Player2.png");
 	
 	objs_.push_back(m_player_2);

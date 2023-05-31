@@ -271,12 +271,39 @@ void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 void TronServer::stepSimulation()
 {
     // TO DO : 
-    //checkCollisions();
+    checkCollisions();
 }
 
 void TronServer::checkCollisions()
 {
     // TO DO :
+    // CollisionState colState = NONE_COLLIDED;
+
+    // if (players[0]->player->getPlayerHead() == players[1]->player->getPlayerHead())
+    //     colState = BOTH_COLLIDED;
+
+    // int i = 0;
+    // while (i < players.size() && colState != BOTH_COLLIDED) {
+    //     Coor head = players[i]->player->getPlayerHead();
+    //     if (thisCollide(head, tab)) {
+    //         switch (colState) {
+    //             case NONE_COLLIDED:
+    //                 if (i == 0)
+    //                     colState = PLAYER1_COLLIDED;
+    //                 else
+    //                     colState = PLAYER2_COLLIDED;
+    //                 break;
+    //             case PLAYER1_COLLIDED:
+    //                 colState = BOTH_COLLIDED;
+    //                 break;
+    //             case PLAYER2_COLLIDED:
+    //             case BOTH_COLLIDED:
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    //     i++;
+    // }
 }
 
 void TronServer::updateInfoClients()
