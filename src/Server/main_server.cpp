@@ -3,7 +3,7 @@
 
 #include "TronServer/TronServer.h"
 
-void initGame(char **argv){
+void initServer(char **argv){
 
     TronServer server(argv[1], argv[2]);
 
@@ -12,7 +12,6 @@ void initGame(char **argv){
     }).detach();
     
     server.run();
-    //client.shutdown();
 }
 
 int main(int argc, char *argv[]){
@@ -21,7 +20,7 @@ int main(int argc, char *argv[]){
             std::cout << "Usage: ./Tron.out <ip>(0.0.0.0) <port>(2000)\n";
             return 0;
         }
-        initGame(argv);
+        initServer(argv);
     }
     catch(const std::string& e)
     {

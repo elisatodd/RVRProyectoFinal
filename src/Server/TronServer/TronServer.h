@@ -37,6 +37,7 @@ private:
     bool m_p1_ready, m_p2_ready;
 
     int m_timer; // game over timer
+    int m_disconnect_timer;  //Timer to disconnect if no players
 
     MessageClient::InputType m_input_t1, m_input_t2; 
     

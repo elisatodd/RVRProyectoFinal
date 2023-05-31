@@ -48,10 +48,12 @@ void TronClient::run()
 				continue;
 			}
 
-			if ((event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_RETURN))
+			if ((event.type == SDL_KEYDOWN && currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_RETURN))
 			{
 				std::cout << "Start Game\n";
 				sendGameMessage(MessageClient::InputType::PLAY);
+				clearGameObjects();
+				loadBackground("./assets/images/MenuReady.png");
 				continue;
 			}
 
@@ -157,12 +159,13 @@ void TronClient::changeState(const MessageServer::ServerState state)
 	}
 	case MessageServer::ServerState::READY:
 	{
-		std::cout << "Ready to play.";
-		loadBackground("./assets/images/MenuReady.png");
+		std::cout << "Match found.";
+		loadBackground("./assets/images/MenuPlay.png");
 		break;
 	}
 	case MessageServer::ServerState::PLAYING:
 		std::cout << "Playing...";
+		loadBackground("./assets/images/GameWithBoard.png");
 		break;
 	case MessageServer::ServerState::GAME_OVER:
 	{
