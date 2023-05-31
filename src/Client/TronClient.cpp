@@ -168,7 +168,7 @@ void TronClient::changeState(const MessageServer::ServerState state)
 		std::cout << "Playing...";
 		loadBackground("./assets/images/GameWithBoard.png");
 		// load game elements: players and score
-		loadGame();
+		// loadGame();
 		break;
 	case MessageServer::ServerState::GAME_OVER:
 	{

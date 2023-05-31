@@ -18,11 +18,11 @@ enum Directions { UP = 0, DOWN, RIGHT, LEFT };
 class Player : public GameObject {
 public:
     Player(Coor c);
-    virtual ~Player(); 
+    virtual ~Player() {}; 
 
     void handleInput(const SDL_Event &) override;
-    void render() override;
-    void update() override;
+    void render() override {};
+    void update() override {} ;
 
     void setControls(std::string u, std::string d, std::string r, std::string l);
     void update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode);
