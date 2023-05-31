@@ -1,5 +1,6 @@
 #include "Coor.h"
 
+
 Coor::Coor(int _fil, int _col) : x(_fil), y(_col) {}
 
 Coor Coor::operator+(const Coor& c) const {
@@ -20,4 +21,9 @@ bool Coor::operator!=(const Coor& c) const {
 
 bool Coor::Equals(const Coor& c) const {
     return *this == c;
+}
+
+std::ostream& operator<<(std::ostream& os, const Coor& coor) {
+    os << "Coor: (" << coor.x << ", " << coor.y << ")";
+    return os;
 }

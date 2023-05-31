@@ -19,8 +19,8 @@ void GameManager::Start() {
     winner_ = NONE;
     tab_ = new Tablero("assets/levels/level1.txt");
     competitorsSystem_ = new CompetitorsSystem(gameMode_, 3, tab_);
-    std::cout << "depuration2\n";
-    Update();
+    std::cout << "[GM]: Reading Level Map\n";
+    //Update();
 }
 
 GameMode GameManager::getGameMode() {

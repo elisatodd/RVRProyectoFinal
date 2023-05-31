@@ -21,12 +21,12 @@ public:
 	GameManager& operator=(GameManager&&) = delete;
 
     void Start();
+    void Update();
     GameMode getGameMode();
     void setGameMode(GameMode gM);
     Tablero* getTablero();
 
 private:
-    void Update();
     void ShowWinner();
 
     State state_;

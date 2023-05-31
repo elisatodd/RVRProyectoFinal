@@ -3,6 +3,7 @@
 #include "../SDLUtils/SDLUtils.h"
 #include "../SDLUtils/Window.h"
 #include "../SDLUtils/GameObject.h"
+#include "GameUtils/Tablero.h"
 #include "GameUtils/GameManager.h"
 
 TronClient::TronClient(const char *s, const char *p) : client_socket(s, p)
@@ -194,8 +195,8 @@ void TronClient::loadBackground(const std::string &textFile)
 void TronClient::loadGame(){
 
 	// Add both players with initial position and size
-
-	Coor p1_coor = Coor(0, 0);
+	GameManager::instance()->Start();
+	Coor p1_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_1 = new Player(p1_coor);
 	m_player_1->setTransform(200, Window().height() / 2);
 	m_player_1->setSize(PLAYER_SIZE, PLAYER_SIZE);
@@ -203,13 +204,16 @@ void TronClient::loadGame(){
 	
 	objs_.push_back(m_player_1);
 
-	Coor p2_coor = Coor(0, 1);
+	Coor p2_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_2 = new Player(p2_coor);
 	m_player_2->setTransform(800, Window().height() / 2);
 	m_player_2->setSize(PLAYER_SIZE, PLAYER_SIZE);
 	m_player_2->setTexture("./assets/images/Player2.png");
 	
 	objs_.push_back(m_player_2);
+
+	std::cout << "Pos p1: " << p1_coor << "\n";
+	std::cout << "Pos p2: " << p2_coor << "\n";
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)
