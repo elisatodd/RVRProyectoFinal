@@ -124,8 +124,9 @@ void TronClient::updateGOsInfo(MessageServer *msg)
 {
 	if (currentState == MessageServer::ServerState::PLAYING)
 	{
-		// player_1->setTransform(msg->m_pos_p1);
-		// player_2->setTransform(msg->m_pos_p2);
+		// actualizar posición de los jugadores
+		if (m_player_1 != nullptr) m_player_1->setTransform(msg->m_pos_p1);
+		if (m_player_2 != nullptr) m_player_2->setTransform(msg->m_pos_p2);
 	}
 }
 
@@ -166,6 +167,8 @@ void TronClient::changeState(const MessageServer::ServerState state)
 	case MessageServer::ServerState::PLAYING:
 		std::cout << "Playing...";
 		loadBackground("./assets/images/GameWithBoard.png");
+		// load game elements: players and score
+		loadGame();
 		break;
 	case MessageServer::ServerState::GAME_OVER:
 	{
@@ -186,6 +189,27 @@ void TronClient::loadBackground(const std::string &textFile)
 	bg->setEnabled(true);
 	objs_.push_back(bg);
 
+}
+
+void TronClient::loadGame(){
+
+	// Add both players with initial position and size
+
+	Coor p1_coor = Coor(0, 0);
+	m_player_1 = new Player(p1_coor);
+	m_player_1->setTransform(200, Window().height() / 2);
+	m_player_1->setSize(PLAYER_SIZE, PLAYER_SIZE);
+	m_player_1->setTexture("./assets/images/Player1.png");
+	
+	objs_.push_back(m_player_1);
+
+	Coor p2_coor = Coor(0, 1);
+	m_player_2 = new Player(p2_coor);
+	m_player_2->setTransform(800, Window().height() / 2);
+	m_player_2->setSize(PLAYER_SIZE, PLAYER_SIZE);
+	m_player_2->setTexture("./assets/images/Player2.png");
+	
+	objs_.push_back(m_player_2);
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)

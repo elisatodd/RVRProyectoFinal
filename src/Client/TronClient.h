@@ -19,6 +19,8 @@
 
 #include "../SDLUtils/Vector2D.h"
 
+#include "GameUtils/Player.h"
+
 #define PLAYER_SIZE 10 // 10x10
 
 class GameObject;
@@ -57,6 +59,9 @@ private:
     std::vector<GameObject *> objs_;
     std::vector<GameObject *> gObjsToAdd_;
 
+    Player* m_player_1;
+    Player* m_player_2;
+
     MessageServer::ServerState currentState, nextState;
 
     // message thread
@@ -71,6 +76,7 @@ private:
 
    // void changeState(const MessageServer::ServerState state);
     void loadBackground(const std::string &textFile);
+    void loadGame();
     void playLoad();
 
     void refresh(); // cleans gOs if they are disabled

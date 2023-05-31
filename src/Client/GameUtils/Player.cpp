@@ -17,6 +17,10 @@ void Player::setControls(std::string u, std::string d, std::string r, std::strin
     moves[Directions::LEFT] = l;
 }
 
+void Player::handleInput(const SDL_Event &e) {
+    // TO DO
+}
+
 //Actualización de juego
 void Player::update(CompetitorsSystem* cS, Tablero* tab, char input, GameMode& gameMode) {
     procesaInput(input, gameMode);
