@@ -99,9 +99,6 @@ void Tablero::render() {
     int screenWidth = Window().width();
     int screenHeight = Window().height();
 
-    int xOffset = (screenWidth - xLength * OBSTACLE_SIZE) / 2;
-    int yOffset = (screenHeight - yLength * OBSTACLE_SIZE) / 2;
-
     SDL_Rect src = build_sdlrect(0, 0, 1, 1); // texture size
 
     for (int i = 0; i < getWidth(); i++) {

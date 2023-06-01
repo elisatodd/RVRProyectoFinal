@@ -11,7 +11,7 @@
 
 Player::Player(Coor c) {
     init_pos = c;
-    player.InsertaFinal(c);
+    player.push_back(c);
     dir_ = Coor(1, 0);
     init_dir = dir_;
 }
@@ -30,23 +30,23 @@ void Player::handleInput(const SDL_Event &e) {
 //Actualización de juego
 void Player::playerUpdate() {
     //procesaInput(input, gameMode);
-    player.InsertaFinal(player.nEsimo(player.CuentaEltos() - 1) + dir_);
+    player.push_back(player[player.size() - 1] + dir_);
 }
 
 Coor Player::getPlayerHead() {
-    return player.nEsimo(player.CuentaEltos() - 1);
+    return player[player.size() - 1];
 }
 
 void Player::setPlayerHead(Coor c)
 {
-    player.nEsimo(player.CuentaEltos() - 1) = c;
+    player[player.size() - 1] = c;
 }
 
 bool Player::collisionWithThisBody(Coor c) {
     int i = 0;
-    while (i < player.CuentaEltos() - 1 && c != player.nEsimo(i))
+    while (i < player.size() - 1 && c != player[i])
         i++;
-    return i != player.CuentaEltos() - 1;
+    return i != player.size() - 1;
 }
 
 void Player::render(){
@@ -54,16 +54,16 @@ void Player::render(){
     assert(m_texture != nullptr);
     Vector2D renderPosition = GameManager::instance()->coorToRenderPos(getPlayerHead());
     SDL_Rect src = build_sdlrect(0, 0, m_texture_size.getX(), m_texture_size.getY());
-    SDL_Rect dest;
     
-    for(int i = 0; i < player.CuentaEltos(); i++){
-        Vector2D renderPos = GameManager().coorToRenderPos(player.nEsimo(i));
-        dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
-        Render(src, dest);
+    for(int i = 0; i < player.size(); i++){
+        Vector2D renderPos = GameManager().coorToRenderPos(player[i]);
+        SDL_Rect dest = build_sdlrect(renderPos, m_size.getX(), m_size.getY());
+        SDL_RenderCopyEx(Window().renderer(), m_texture, &src, &dest, m_rotation, nullptr, SDL_FLIP_NONE);
+        std::cout << player[i] << "\n";
     }
 
-    dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
-    Render(src, dest);
+    // dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
+    // Render(src, dest);
 }
 
 void Player::procesaInput(char c, GameMode& gameMode) {
@@ -94,8 +94,8 @@ void Player::ChangeDir(Coor dir) {
 }
 
 void Player::ResetPosition() {
-    player.BorraTodos();
-    player.InsertaFinal(init_pos);
+    player.clear();
+    player.push_back(init_pos);
     dir_ = init_dir;
 }
 
@@ -125,6 +125,6 @@ char Player::ConvertStringToDir(std::string s) {
 }
 
 void Player::Teleport(Coor c) {
-    player.BorraElto(getPlayerHead());
-    player.InsertaFinal(c + dir_);
+    //player.BorraElto(getPlayerHead());
+    //player.InsertaFinal(c + dir_);
 }

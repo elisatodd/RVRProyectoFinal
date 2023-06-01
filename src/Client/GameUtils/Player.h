@@ -40,7 +40,7 @@ public:
 
 private:
     int id;
-    ListaCoor player;
+    std::vector<Coor> player;
     Coor init_pos;
     Coor dir_;
     Coor init_dir;
