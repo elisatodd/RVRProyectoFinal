@@ -165,14 +165,14 @@ void TronServer::handleInput()
     case MessageClient::InputType::RIGHT:
         m_dir_p1 = Vector2D(1, 0);
     break;
-    case MessageClient::InputType::FRONT:
+    case MessageClient::InputType::UP:
         m_dir_p1 = Vector2D(0, -1);
     break;
-    case MessageClient::InputType::BACK:
+    case MessageClient::InputType::DOWN:
         m_dir_p1 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
-        std::cout << "[Server]p2  ready\n";
+        //std::cout << "[Server]p2  ready\n";
         m_p1_ready = true;
     break;
     }
@@ -186,14 +186,14 @@ void TronServer::handleInput()
     case MessageClient::InputType::RIGHT:
         m_dir_p2 = Vector2D(1, 0);
     break;
-    case MessageClient::InputType::FRONT:
+    case MessageClient::InputType::UP:
         m_dir_p2 = Vector2D(0, -1);
     break;
-    case MessageClient::InputType::BACK:
+    case MessageClient::InputType::DOWN:
         m_dir_p2 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
-        std::cout << "[Server]: p2 ready\n";
+        //std::cout << "[Server]: p2 ready\n";
         m_p2_ready = true;
     break;
     }
@@ -249,23 +249,18 @@ void TronServer::removePlayer(Socket *player_sock)
 
 void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 {
-    m_win_widthL = msg->m_win_widthL;
-    m_win_width = msg->m_win_width;
-    m_win_height = msg->m_win_height;
-    m_win_heightT = msg->m_win_heightT;
-
     // TO DO : Initial values
 
-    // if (!pl)
-    // {
-    //     dim_t1 = msg->dim;
-    //     rot_t1 = msg->rot;
-    // }
-    // else
-    // {
-    //     dim_t2 = msg->dim;
-    //     rot_t2 = msg->rot;
-    // }
+    if (!pl)
+    {
+       m_pos_p1 = msg->m_pos;
+       m_dir_p1 = msg->m_dir;
+    }
+    else
+    {
+       m_pos_p2 = msg->m_pos;
+       m_dir_p2 = msg->m_dir;
+    }
 }
 
 void TronServer::stepSimulation()

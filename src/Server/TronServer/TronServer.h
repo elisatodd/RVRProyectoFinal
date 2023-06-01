@@ -32,7 +32,7 @@ private:
 
     std::mutex m_input_mutex; // mutex lock to handle input safely
 
-    // server stae
+    // server state
     MessageServer::ServerState m_state;
     bool m_p1_ready, m_p2_ready;
 
@@ -41,10 +41,6 @@ private:
 
     MessageClient::InputType m_input_t1, m_input_t2; 
     
-    // game data
-    int m_win_widthL, m_win_heightT;
-    int m_win_width, m_win_height;
-
     // Players info
     Vector2D m_pos_p1, m_pos_p2;
     Vector2D m_dir_p1, m_dir_p2;

@@ -28,8 +28,8 @@ class SDL_Renderer;
 
 struct InitData
 {
-    Vector2D size;
-    Vector2D position;
+    Vector2D pos;
+    Vector2D dir;
 };
 
 class TronClient

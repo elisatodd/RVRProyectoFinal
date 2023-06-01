@@ -12,6 +12,7 @@
 
 class Tablero;
 class CompetitorsSystem;
+class TronClient;
 
 enum Directions { UP = 0, DOWN, RIGHT, LEFT };
 
@@ -20,7 +21,7 @@ public:
     Player(Coor c);
     virtual ~Player() {}; 
 
-    void handleInput(const SDL_Event &) override;
+    void handleInput(TronClient* client, const SDL_Event &) override;
 
     void setControls(std::string u, std::string d, std::string r, std::string l);
     void playerUpdate();

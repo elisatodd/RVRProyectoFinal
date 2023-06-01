@@ -1,16 +1,8 @@
 #include "MessageClient.h"
 
-void MessageClient::setDefaultValues(const int &w_wL, const int &w_w, const int &w_hT, const int &w_h, const Vector2D &d)
+void MessageClient::setDefaultValues(const Vector2D &p, const Vector2D &d)
 {
-    m_win_widthL = w_wL; m_win_heightT = w_hT;
-    m_win_width = w_w; m_win_height = w_h;
-    m_size = d;
-};
-
-void MessageClient::setDefaultValues(const int &w_w, const int &w_h, const Vector2D &d)
-{
-    m_win_width = w_w; m_win_height = w_h;
-    m_size = d; 
+    m_pos = p; m_dir = d; 
 };
 
 void MessageClient::to_bin()
@@ -26,20 +18,10 @@ void MessageClient::to_bin()
     memcpy(tmp, &m_input, sizeof(InputType));
     tmp += sizeof(InputType);
 
-    memcpy(tmp, &m_win_widthL, sizeof(int));
-    tmp += sizeof(int);
+    memcpy(tmp, &m_pos, sizeof(Vector2D));
+    tmp += sizeof(Vector2D);
 
-    memcpy(tmp, &m_win_width, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(tmp, &m_win_heightT, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(tmp, &m_win_height, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(tmp, &m_size, sizeof(Vector2D));
-//    tmp += sizeof(Vector2D);
+    memcpy(tmp, &m_dir, sizeof(Vector2D));
 }
 
 int MessageClient::from_bin(char *bobj)
@@ -55,20 +37,10 @@ int MessageClient::from_bin(char *bobj)
     memcpy(&m_input, tmp, sizeof(InputType));
     tmp += sizeof(InputType);
 
-    memcpy(&m_win_widthL, tmp, sizeof(int));
-    tmp += sizeof(int);
+    memcpy(&m_pos, tmp, sizeof(Vector2D));
+    tmp += sizeof(Vector2D);
 
-    memcpy(&m_win_width, tmp, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(&m_win_heightT, tmp, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(&m_win_height, tmp, sizeof(int));
-    tmp += sizeof(int);
-
-    memcpy(&m_size, tmp, sizeof(Vector2D));
-  //  tmp += sizeof(Vector2D);
+    memcpy(&m_dir, tmp, sizeof(Vector2D));
 
     return 0;
 }

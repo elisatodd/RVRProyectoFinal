@@ -2,6 +2,8 @@
 #include "CompetitorsSystem.h"
 #include "Tablero.h"
 #include "GameManager.h"
+#include "../TronClient.h"
+
 #include <iostream>
 
 #include <../../SDL2/SDL_image.h>
@@ -23,8 +25,27 @@ void Player::setControls(std::string u, std::string d, std::string r, std::strin
     moves[Directions::LEFT] = l;
 }
 
-void Player::handleInput(const SDL_Event &e) {
-    // TO DO
+void Player::handleInput(TronClient* client, const SDL_Event &event) {
+    if (event.type == SDL_KEYDOWN){
+        switch(event.key.keysym.scancode){
+            case SDL_SCANCODE_W : case SDL_SCANCODE_UP :{
+                client->sendGameMessage(MessageClient::InputType::UP);
+                break;
+            }
+            case SDL_SCANCODE_A : case SDL_SCANCODE_LEFT :{
+                client->sendGameMessage(MessageClient::InputType::LEFT);
+                break;
+            }
+            case SDL_SCANCODE_S : case SDL_SCANCODE_DOWN :{
+                client->sendGameMessage(MessageClient::InputType::DOWN);
+                break;
+            }
+            case SDL_SCANCODE_D : case SDL_SCANCODE_RIGHT :{
+                client->sendGameMessage(MessageClient::InputType::RIGHT);
+                break;
+            }
+        }
+    }
 }
 
 //Actualización de juego
@@ -59,13 +80,10 @@ void Player::render(){
         Vector2D renderPos = GameManager().coorToRenderPos(player[i]);
         SDL_Rect dest = build_sdlrect(renderPos, m_size.getX(), m_size.getY());
         SDL_RenderCopyEx(Window().renderer(), m_texture, &src, &dest, m_rotation, nullptr, SDL_FLIP_NONE);
-        std::cout << player[i] << "\n";
     }
-
-    // dest = build_sdlrect(renderPosition, m_size.getX(), m_size.getY());
-    // Render(src, dest);
 }
 
+// TO DO : delete
 void Player::procesaInput(char c, GameMode& gameMode) {
     switch (c) {
         case 'u':
@@ -111,6 +129,7 @@ bool Player::hasThisMove(std::string s) {
     return i != 4;
 }
 
+// To DO : delete
 char Player::ConvertStringToDir(std::string s) {
     char c = ' ';
     if (s == moves[Directions::UP])

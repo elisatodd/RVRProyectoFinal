@@ -16,9 +16,10 @@ void TronClient::init(int w, int h)
 	Window::init("TRON", w, h);
 	GameManager::init();
 
+	// Initial Data must be different for each player (TO DO)
 	InitData data;
-	data.size = Vector2D(PLAYER_SIZE, PLAYER_SIZE);
-    data.position = Vector2D(0, 0);
+	data.pos = Vector2D(0, 0);
+    data.dir = Vector2D(1, 0);
 
 	// init connection
 	std::thread([this]()
@@ -49,6 +50,9 @@ void TronClient::run()
 				continue;
 			}
 
+			if (event.type == SDL_KEYDOWN){
+
+			}
 			if ((event.type == SDL_KEYDOWN && currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_SPACE))
 			{
 				std::cout << "Start Game\n";
@@ -58,16 +62,15 @@ void TronClient::run()
 				continue;
 			}
 
+			for (auto &o : objs_)
+				if (o->isEnabled())
+					o->handleInput(this, event);
+
 			if(currentState == MessageServer::ServerState::PLAYING)
 			{
 				m_player_1->playerUpdate();
 				m_player_2->playerUpdate();
 			}
-
-			for (auto &o : objs_)
-				if (o->isEnabled())
-					o->handleInput(event);
-			
 		}
 
 		if (currentState == MessageServer::ServerState::SERVER_QUIT)
@@ -90,6 +93,7 @@ void TronClient::run()
 
 		Window().presentRenderer();
 
+		// Delay so the rendering is not too fast
 		Uint32 frameTime = Window().currRealTime() - startTime;
 		if (frameTime < 20)
 			SDL_Delay(20 - frameTime);
@@ -132,9 +136,23 @@ void TronClient::updateGOsInfo(MessageServer *msg)
 {
 	if (currentState == MessageServer::ServerState::PLAYING)
 	{
+		//std::cout << "Update GOs info\n";
+
 		// TO DO: actualizar posición de los jugadores, tal vez sea necesario actualizar la direccion que lleva
-		if (m_player_1 != nullptr) m_player_1->setTransform(msg->m_pos_p1);
-		if (m_player_2 != nullptr) m_player_2->setTransform(msg->m_pos_p2);
+        if (m_player_1 != nullptr) {
+            Coor h(msg->m_pos_p1.getX(), msg->m_pos_p1.getY());
+            Coor c(msg->m_dir_p1.getX(), msg->m_dir_p1.getY());
+
+            m_player_1->setPlayerHead(h);
+            m_player_1->ChangeDir(c);
+        }
+        if (m_player_2 != nullptr){
+            Coor h(msg->m_pos_p2.getX(), msg->m_pos_p2.getY());
+            Coor c(msg->m_dir_p2.getX(), msg->m_dir_p2.getY());
+
+            m_player_2->setPlayerHead(h);
+            m_player_2->ChangeDir(c);
+        }
 	}
 }
 
@@ -227,15 +245,20 @@ void TronClient::loadGame(){
 	
 	objs_.push_back(m_player_2);
 
-	std::cout << "Pos p1: " << m_player_1->getPlayerHead() << "\n";
-	std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
+	//std::cout << "Pos p1: " << m_player_1->getPlayerHead() << "\n";
+	//std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
+
+	// Tell the server each client's initial pos and dir
+
+
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)
 {
+	// Send an input message
 	MessageClient login;
 	login.m_type = MessageClient::ClientMessageType::HANDLE_INPUT;
-	login.m_input = input;
+	login.m_input = input;		
 	client_socket.send(login, client_socket);
 }
 
@@ -244,12 +267,8 @@ void TronClient::sendMatchMessage(MessageClient::ClientMessageType msg, InitData
 	MessageClient login;
 	login.m_type = msg;
 
-	// if (data != nullptr)
-	// 	login.setDefaultValues(GameManager::instance()->getRelativeScenerioLimits().getX(), // Left
-	// 						   GameManager::instance()->getScenerioLimits().getX(),			// Right
-	// 						   GameManager::instance()->getRelativeScenerioLimits().getY(), // Top
-	// 						   GameManager::instance()->getScenerioLimits().getY() + 45,	// Bottom
-	// 						   data->dim, data->rot);
+	if (data != nullptr)
+		login.setDefaultValues(data->pos, data->dir);
 
 	client_socket.send(login, client_socket);
 	printf("Sending Match Message...\n");
