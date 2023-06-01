@@ -72,6 +72,7 @@ private:
     // physics methods for update simulation
     void checkCollisions();
     void checkWinners();
+    bool playersAlreadyMoving();
 
     // update data to players
     void updateInfoClients();

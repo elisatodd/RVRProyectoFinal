@@ -182,14 +182,12 @@ void TronClient::updateGOsInfo(MessageServer *msg)
             Coor h(msg->m_pos_p1.getX(), msg->m_pos_p1.getY());
             Coor c(msg->m_dir_p1.getX(), msg->m_dir_p1.getY());
 
-            //m_player_1->setPlayerHead(h);
             m_player_1->ChangeDir(c);
         }
         if (m_player_2 != nullptr){
             Coor h(msg->m_pos_p2.getX(), msg->m_pos_p2.getY());
             Coor c(msg->m_dir_p2.getX(), msg->m_dir_p2.getY());
 
-            //m_player_2->setPlayerHead(h);
             m_player_2->ChangeDir(c);
         }
 
@@ -286,9 +284,6 @@ void TronClient::loadGame(){
 	
 	objs_.push_back(m_player_2);
 
-	//std::cout << "Pos p1: " << m_player_1->getPlayerHead() << "\n";
-	//std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
-
 	// Create score items
 	m_score_p1 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P1: 0", {255, 255, 255});
 	m_score_p1->setPosition(250, 45);
@@ -302,12 +297,14 @@ void TronClient::updateScores(int s1, int s2){
 	if (s1 != m_score_p1->getScore()){
 		std::string newText1 = "Score: " + std::to_string(s1);
 		m_score_p1->setScore(s1);
+		std::cout << newText1 <<"\n";
 		//m_score_p1->setText(newText1);
 	}
 
 	if (s2 != m_score_p2->getScore()){
 		std::string newText2 = "Score: " + std::to_string(s2);
-		m_score_p1->setScore(s2);
+		dm_score_p1->setScore(s2);
+		std::cout << newText2 <<"\n";
 		//m_score_p2->setText(newText2);
 	}
 

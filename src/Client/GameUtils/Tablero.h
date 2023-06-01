@@ -12,6 +12,8 @@
 class Tablero : public GameObject {
 private:
     std::vector<std::vector<TipoCasilla>> tab;
+    std::vector<std::vector<TipoCasilla>> tab_original_copy;
+
     Coor player1_IniPos;
     Coor player2_IniPos;
     std::default_random_engine rnd;
@@ -25,6 +27,7 @@ public:
 
     void GenerateTablero(const std::string& file);
     void DeleteTablero();
+    void ResetTableroToDefault();
     //void Render();
 
     void render() override;
@@ -33,6 +36,7 @@ public:
     bool outOfBounds(Coor C);
     int getWidth() const;
     int getHeight() const;
+    void setWall(Coor c);
     Coor getPlayerOneInitialPosition() const;
     Coor getPlayerTwoInitialPosition() const;
 };

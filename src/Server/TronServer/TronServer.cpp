@@ -179,6 +179,8 @@ void TronServer::onRoundFinished()
     m_dir_p1 = Vector2D(0, 0);
     m_dir_p2 = Vector2D(0, 0);
 
+    m_tab->ResetTableroToDefault();
+
     MessageServer msg;
     msg.m_type = MessageServer::ServerMessageType::ROUND_FINISHED;
     m_server_socket.send(msg, *m_tron_1);
@@ -321,8 +323,13 @@ void TronServer::stepSimulation()
     checkWinners();
 
     // Move player if both are moving
-    if(m_dir_p1 != Vector2D(0, 0) && m_dir_p2 != Vector2D(0, 0))
+    if(playersAlreadyMoving())
     {
+
+        m_tab->setWall(Coor(m_pos_p1.getX(), m_pos_p1.getY()));
+        m_tab->setWall(Coor(m_pos_p2.getX(), m_pos_p2.getY()));
+
+        //Sets a wall before to able the collision afterwards
         m_pos_p1 += m_dir_p1;
         m_pos_p2 += m_dir_p2;
     }
@@ -333,8 +340,11 @@ void TronServer::stepSimulation()
 
 void TronServer::checkCollisions()
 {
-    // TO DO :
-    // CollisionState colState = NONE_COLLIDED;
+    //Si no han empezado a moverse, no hay que comprobar posición
+    if(!playersAlreadyMoving())
+    {
+        return;
+    }
 
     if (m_pos_p1 == m_pos_p2){
         m_p1_hit = true;
@@ -346,12 +356,20 @@ void TronServer::checkCollisions()
         return;
     }
 
-    //m_p1_hit = m_tab->thereIsWall({(int) m_pos_p1.getX(),(int) m_pos_p1.getY()});
-    //m_p2_hit = m_tab->thereIsWall({(int) m_pos_p2.getX(),(int) m_pos_p2.getY()});
+    m_p1_hit = m_tab->thereIsWall({(int) m_pos_p1.getX(),(int) m_pos_p1.getY()});
+    m_p2_hit = m_tab->thereIsWall({(int) m_pos_p2.getX(),(int) m_pos_p2.getY()});
 }
 
 void TronServer::checkWinners()
 {
+    //SIf no one won, return
+    if(!m_p1_hit && !m_p2_hit)
+        return;
+
+    //Wait before reset to let see the player who was the one who collided
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+
+    //Check who collided and restart
     if(m_p1_hit && m_p2_hit)
     {
         std::cout << "Both Hit!\n";
@@ -362,11 +380,16 @@ void TronServer::checkWinners()
         m_score_p2++;
         onRoundFinished();
     }
-    else if(m_p2_hit){
+    else{
         std::cout << "P2 Hit!\n";
         m_score_p1++;
         onRoundFinished();
     }
+}
+
+bool TronServer::playersAlreadyMoving()
+{
+    return m_dir_p1 != Vector2D(0, 0) && m_dir_p2 != Vector2D(0, 0);
 }
 
 void TronServer::updateInfoClients()

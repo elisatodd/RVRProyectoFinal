@@ -68,31 +68,12 @@ void Tablero::GenerateTablero(const std::string& file) {
                 cont++;
         }
     }
+    tab_original_copy = tab;
 }
 
-// void Tablero::Render() {
-//     // for (int i = 0; i < getWidth(); i++) {
-//     //     for (int j = 0; j < getHight(); j++) {
-//     //         Console::SetCursorPosition((i * 2) + offsetX, j + offsetY);
-//     //         switch (tab[i][j]) {
-//     //             case TipoCasilla::FREE:
-//     //                 Console::BackgroundColor = ConsoleColor::Gray;
-//     //                 break;
-//     //             case TipoCasilla::WALL:
-//     //                 Console::BackgroundColor = ConsoleColor::DarkGray;
-//     //                 break;
-//     //             default:
-//     //                 break;
-//     //         }
-//     //         Console::Write("  ");
-//     //     }
-//     // }
-
-//     // if (renderInitPos) {
-//     //     DrawInitPlayer(offsetX, offsetY, player1_IniPos, ConsoleColor::DarkMagenta);
-//     //     DrawInitPlayer(offsetX, offsetY, player2_IniPos, ConsoleColor::Blue);
-//     // }
-// }
+void Tablero::ResetTableroToDefault() {
+    tab = tab_original_copy;
+}
 
 void Tablero::render() {
 
@@ -114,6 +95,14 @@ void Tablero::render() {
         }
     }
 }
+
+void Tablero::setWall(Coor c){
+    if(outOfBounds(c))
+        return;
+
+    tab[c.x][c.y] = TipoCasilla::WALL;
+}
+
 
 void Tablero::DeleteTablero() {
     tab.clear();
