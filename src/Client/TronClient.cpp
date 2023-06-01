@@ -19,7 +19,7 @@ void TronClient::init(int w, int h)
 	// Initial Data must be different for each player (TO DO)
 	InitData data;
 	data.pos = Vector2D(0, 0);
-    data.dir = Vector2D(1, 0);
+    data.dir = Vector2D(0, 0);
 
 	// init connection
 	std::thread([this]()
@@ -66,11 +66,6 @@ void TronClient::run()
 				if (o->isEnabled())
 					o->handleInput(this, event);
 
-			if(currentState == MessageServer::ServerState::PLAYING)
-			{
-				m_player_1->playerUpdate();
-				m_player_2->playerUpdate();
-			}
 		}
 
 		if (currentState == MessageServer::ServerState::SERVER_QUIT)
@@ -126,6 +121,17 @@ void TronClient::client_message_thread()
 		case MessageServer::ServerMessageType::ACTION:
 		{
 			switch (server_recv_msg.m_action)
+			{
+				case MessageServer::ActionType::MOVE:
+				{
+					if(m_player_1 != nullptr && m_player_2 != nullptr)
+					{
+						m_player_1->playerUpdate();
+						m_player_2->playerUpdate();
+					}
+				}
+				break;
+			}
 			break;
 		}
 		}
@@ -143,14 +149,14 @@ void TronClient::updateGOsInfo(MessageServer *msg)
             Coor h(msg->m_pos_p1.getX(), msg->m_pos_p1.getY());
             Coor c(msg->m_dir_p1.getX(), msg->m_dir_p1.getY());
 
-            m_player_1->setPlayerHead(h);
+            //m_player_1->setPlayerHead(h);
             m_player_1->ChangeDir(c);
         }
         if (m_player_2 != nullptr){
             Coor h(msg->m_pos_p2.getX(), msg->m_pos_p2.getY());
             Coor c(msg->m_dir_p2.getX(), msg->m_dir_p2.getY());
 
-            m_player_2->setPlayerHead(h);
+            //m_player_2->setPlayerHead(h);
             m_player_2->ChangeDir(c);
         }
 	}

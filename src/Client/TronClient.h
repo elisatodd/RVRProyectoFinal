@@ -59,8 +59,8 @@ private:
     std::vector<GameObject *> objs_;
     std::vector<GameObject *> gObjsToAdd_;
 
-    Player* m_player_1;
-    Player* m_player_2;
+    Player* m_player_1 = nullptr;
+    Player* m_player_2 = nullptr;
 
     MessageServer::ServerState currentState, nextState;
 

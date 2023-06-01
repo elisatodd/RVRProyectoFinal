@@ -14,7 +14,7 @@
 Player::Player(Coor c) {
     init_pos = c;
     player.push_back(c);
-    dir_ = Coor(1, 0);
+    dir_ = Coor(0, 0);
     init_dir = dir_;
 }
 
@@ -50,8 +50,11 @@ void Player::handleInput(TronClient* client, const SDL_Event &event) {
 
 //Actualización de juego
 void Player::playerUpdate() {
+
     //procesaInput(input, gameMode);
-    player.push_back(player[player.size() - 1] + dir_);
+    if(player.size()>0 && dir_ != Coor(0, 0)){
+        player.push_back(player[player.size() - 1] + dir_);
+    }
 }
 
 Coor Player::getPlayerHead() {

@@ -4,6 +4,8 @@
 #include <signal.h>
 #include <iostream>
 #include <cassert>
+#include <chrono>
+#include <thread>
 
 #include <SDL2/SDL.h>
 
@@ -88,6 +90,8 @@ void TronServer::run()
 {
     while (!m_exit)
     {
+        Uint32 startTime = SDL_GetTicks();
+
         m_input_mutex.lock(); // mutex lock to protect from alterations
         handleInput();
         m_input_mutex.unlock();
@@ -106,7 +110,10 @@ void TronServer::run()
             // Game is active --> game loop
             stepSimulation();
             updateInfoClients();
-            usleep(TICK_RATE);
+
+            Uint32 frameTime = SDL_GetTicks() - startTime;
+            if (frameTime < 70)
+                std::this_thread::sleep_for(std::chrono::milliseconds(70 - frameTime));
         }
 
         if (m_state == MessageServer::ServerState::GAME_OVER){
@@ -117,6 +124,7 @@ void TronServer::run()
                 sendStateMessage();
             }
         }
+
     }
 
     m_state = MessageServer::ServerState::SERVER_QUIT;
@@ -267,6 +275,7 @@ void TronServer::stepSimulation()
 {
     // TO DO : 
     checkCollisions();
+    
 }
 
 void TronServer::checkCollisions()
@@ -303,10 +312,25 @@ void TronServer::checkCollisions()
 
 void TronServer::updateInfoClients()
 {
-    MessageServer msg(m_pos_p1, m_pos_p2, m_dir_p1, m_dir_p2);
+    Vector2D act_dir1 = m_dir_p1;
+    Vector2D act_dir2 = m_dir_p2;
+    //Si los dos jugadores no han decidido dirección para empezar, enviamos direccion nula
+    if(act_dir1 == Vector2D(0, 0) || act_dir2 == Vector2D(0, 0))
+    {
+        act_dir1 = Vector2D(0, 0);
+        act_dir2 = Vector2D(0, 0);
+    }
+
+    MessageServer msg(m_pos_p1, m_pos_p2, act_dir1, act_dir2);
     msg.m_type = MessageServer::ServerMessageType::UPDATE_INFO;
     m_server_socket.send(msg, *m_tron_1);
     m_server_socket.send(msg, *m_tron_2);
+
+    MessageServer msg2;
+    msg2.m_type = MessageServer::ServerMessageType::ACTION;
+    msg2.m_action = MessageServer::ActionType::MOVE;
+    m_server_socket.send(msg2, *m_tron_1);
+    m_server_socket.send(msg2, *m_tron_2);
 }
 
 void TronServer::sendStateMessage()
