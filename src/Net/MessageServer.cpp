@@ -18,6 +18,12 @@ void MessageServer::to_bin() {
     memcpy(tmp, &m_dir_p2, sizeof(Vector2D));
     tmp += sizeof(Vector2D);
 
+    memcpy(tmp, &m_score_p1, sizeof(int));
+    tmp += sizeof(int);
+
+    memcpy(tmp, &m_score_p2, sizeof(int));
+    tmp += sizeof(int);
+
     memcpy(tmp, &m_type, sizeof(ServerMessageType));
     tmp += sizeof(ServerMessageType);
 

@@ -32,6 +32,9 @@ void TextObject::setText(const std::string& newText) {
     updateTexture();
 }
 
+std::string TextObject::getText(){
+    return text;
+}
 
 void TextObject::setColor(SDL_Color newColor) {
     color = newColor;

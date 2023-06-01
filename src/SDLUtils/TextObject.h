@@ -12,6 +12,8 @@ public:
 
     void setText(const std::string& newText);
 
+    std::string getText();
+
     void setColor(SDL_Color newColor);
 
     void render();

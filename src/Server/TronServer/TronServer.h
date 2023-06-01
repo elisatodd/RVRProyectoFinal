@@ -48,6 +48,7 @@ private:
     Vector2D m_pos_p1, m_pos_p2;
     Vector2D m_dir_p1, m_dir_p2;
     bool m_p1_hit, m_p2_hit;
+    int m_score_p1, m_score_p2;
 
     //Relevant Game Info
     Tablero* m_tab;

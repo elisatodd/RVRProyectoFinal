@@ -266,7 +266,6 @@ void TronServer::removePlayer(Socket *player_sock)
 void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 {
     // TO DO : Initial values
-
     if (!pl)
     {
        m_pos_p1 = msg->m_pos;
@@ -283,7 +282,7 @@ void TronServer::stepSimulation()
 {
     // TO DO : 
     checkCollisions();
-    
+    checkWinners();
 }
 
 void TronServer::checkCollisions()
@@ -333,9 +332,13 @@ void TronServer::checkWinners()
     }
     else if(m_p1_hit){
         std::cout << "P1 Hit!\n";
+        m_score_p2++;
+        onRoundFinished();
     }
     else if(m_p2_hit){
         std::cout << "P2 Hit!\n";
+        m_score_p1++;
+        onRoundFinished();
     }
 }
 
@@ -343,14 +346,14 @@ void TronServer::updateInfoClients()
 {
     Vector2D act_dir1 = m_dir_p1;
     Vector2D act_dir2 = m_dir_p2;
-    //Si los dos jugadores no han decidido dirección para empezar, enviamos dirección nula
+    // Wait for both players to chose a direction for the game to start
     if(act_dir1 == Vector2D(0, 0) || act_dir2 == Vector2D(0, 0))
     {
         act_dir1 = Vector2D(0, 0);
         act_dir2 = Vector2D(0, 0);
     }
 
-    MessageServer msg(m_pos_p1, m_pos_p2, act_dir1, act_dir2);
+    MessageServer msg(m_pos_p1, m_pos_p2, act_dir1, act_dir2, m_score_p1, m_score_p2);
     msg.m_type = MessageServer::ServerMessageType::UPDATE_INFO;
     m_server_socket.send(msg, *m_tron_1);
     m_server_socket.send(msg, *m_tron_2);

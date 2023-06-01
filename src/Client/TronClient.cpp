@@ -1,11 +1,12 @@
 #include "TronClient.h"
 
+#include <regex>
+
 #include "../SDLUtils/SDLUtils.h"
 #include "../SDLUtils/Window.h"
 #include "../SDLUtils/GameObject.h"
 #include "GameUtils/Tablero.h"
 #include "GameUtils/GameManager.h"
-
 
 TronClient::TronClient(const char *s, const char *p) : client_socket(s, p)
 {};
@@ -85,7 +86,8 @@ void TronClient::run()
 	std::cout << "Quitting...\n";
 }
 
-void TronClient::handleInput(const SDL_Event &event){
+void TronClient::handleInput(const SDL_Event &event)
+{
 	// Salir del server
 	if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
 	{
@@ -184,6 +186,8 @@ void TronClient::updateGOsInfo(MessageServer *msg)
             //m_player_2->setPlayerHead(h);
             m_player_2->ChangeDir(c);
         }
+
+		updateScores(msg->m_score_p1, msg->m_score_p2);
 	}
 }
 
@@ -280,14 +284,38 @@ void TronClient::loadGame(){
 	//std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
 
 	// Create score items
-	m_score_p1 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P1: ", {255, 255, 255});
-	m_score_p1->setPosition(100, 100);
+	m_score_p1 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P1: 0", {255, 255, 255});
+	m_score_p1->setPosition(250, 45);
 
+	m_score_p2 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P2: 0", {255, 255, 255});	
+	m_score_p2->setPosition(500, 45);
+}
 
-	m_score_p2 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P2: ", {255, 255, 255});	
-	m_score_p2->setPosition(500, 100);
+void TronClient::updateScores(int s1, int s2){
 
+	std::string input1 = m_score_p1->getText();
+	std::string input2 = m_score_p2->getText();
 
+	std::string newScore1 = changeScoreTo(input1, s1);
+	std::string newScore2 = changeScoreTo(input2, s2);
+
+	m_score_p1->setText(newScore1);
+	m_score_p2->setText(newScore2);
+}
+
+std::string TronClient::changeScoreTo(const std::string& input, int newValue) {
+    std::regex regex("(\\d+)$");
+    
+    std::smatch match;
+    std::string modifiedString = input;
+    
+    if (std::regex_search(input, match, regex)) {
+        std::string numberStr = match.str();
+        
+        modifiedString = std::regex_replace(input, regex, std::to_string(newValue));
+    }
+    
+    return modifiedString;
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)

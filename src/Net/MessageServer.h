@@ -35,8 +35,8 @@ public:
 
     MessageServer(const ServerState s) : m_state(s) {};
 
-    MessageServer(const Vector2D& pos_p1, const Vector2D& pos_p2, const Vector2D& dir_p1, const Vector2D& dir_p2) 
-                : m_pos_p1(pos_p1), m_pos_p2(pos_p2), m_dir_p1(dir_p1), m_dir_p2(dir_p2) {};
+    MessageServer(const Vector2D& pos_p1, const Vector2D& pos_p2, const Vector2D& dir_p1, const Vector2D& dir_p2, int score_p1, int score_p2) 
+                : m_pos_p1(pos_p1), m_pos_p2(pos_p2), m_dir_p1(dir_p1), m_dir_p2(dir_p2), m_score_p1(score_p1), m_score_p2(score_p2) {};
 
     void to_bin();
 
@@ -49,6 +49,8 @@ public:
 
     Vector2D m_pos_p1, m_pos_p2;
     Vector2D m_dir_p1, m_dir_p2;
+
+    int m_score_p1, m_score_p2;
 
     bool playerOneHasWon;
     ServerState m_state;
