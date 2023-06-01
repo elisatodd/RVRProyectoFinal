@@ -6,10 +6,12 @@
 #include <cassert>
 #include <chrono>
 #include <thread>
+#include "../../Client/GameUtils/Tablero.h"
+#include "../../Client/GameUtils/Coor.h"
 
 #include <SDL2/SDL.h>
 
-// Ctrl C handler
+// Ctrl+C handler
 bool m_exit = false;
 void intHandler(int){
     m_exit = true;
@@ -22,7 +24,7 @@ TronServer::TronServer(const char* s, const char* p) : m_server_socket(s, p){
     // bind socket
     m_server_socket.bind();
 
-    // ctrl c handler init
+    // ctrl+c handler init
     struct sigaction act;
     act.sa_handler = intHandler;
     sigaction(SIGINT, &act, NULL);
@@ -33,9 +35,15 @@ TronServer::TronServer(const char* s, const char* p) : m_server_socket(s, p){
     m_dir_p1 = m_dir_p2 = Vector2D(0, 0);
 
     m_state = MessageServer::ServerState::WAITING;
+    m_tab = new Tablero("assets/levels/level1.txt");
 
     reset();
 };
+
+void TronServer::shutdown(){
+    if(m_tab != nullptr)
+        delete m_tab;
+}
 
 void TronServer::server_message_thread()
 {
@@ -283,8 +291,15 @@ void TronServer::checkCollisions()
     // TO DO :
     // CollisionState colState = NONE_COLLIDED;
 
-    // if (players[0]->player->getPlayerHead() == players[1]->player->getPlayerHead())
-    //     colState = BOTH_COLLIDED;
+    if (m_pos_p1 == m_pos_p2){
+        m_p1_hit = true;
+        m_p2_hit = true;
+        return;
+    }
+
+    m_p1_hit = m_tab->thereIsWall({(int) m_pos_p1.getX(),(int) m_pos_p1.getY()});
+    m_p2_hit = m_tab->thereIsWall({(int) m_pos_p2.getX(),(int) m_pos_p2.getY()});
+
 
     // int i = 0;
     // while (i < players.size() && colState != BOTH_COLLIDED) {
@@ -310,11 +325,25 @@ void TronServer::checkCollisions()
     // }
 }
 
+void TronServer::checkWinners()
+{
+    if(m_p1_hit && m_p2_hit)
+    {
+        std::cout << "Both Hit!\n";
+    }
+    else if(m_p1_hit){
+        std::cout << "P1 Hit!\n";
+    }
+    else if(m_p2_hit){
+        std::cout << "P2 Hit!\n";
+    }
+}
+
 void TronServer::updateInfoClients()
 {
     Vector2D act_dir1 = m_dir_p1;
     Vector2D act_dir2 = m_dir_p2;
-    //Si los dos jugadores no han decidido dirección para empezar, enviamos direccion nula
+    //Si los dos jugadores no han decidido dirección para empezar, enviamos dirección nula
     if(act_dir1 == Vector2D(0, 0) || act_dir2 == Vector2D(0, 0))
     {
         act_dir1 = Vector2D(0, 0);

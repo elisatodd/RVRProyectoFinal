@@ -12,6 +12,7 @@ void initServer(char **argv){
     }).detach();
     
     server.run();
+    server.shutdown();
 }
 
 int main(int argc, char *argv[]){

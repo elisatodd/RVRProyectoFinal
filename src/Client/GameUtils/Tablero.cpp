@@ -120,7 +120,11 @@ void Tablero::DeleteTablero() {
 }
 
 bool Tablero::thereIsWall(Coor c){
-    return tab[c.x][c.y] == WALL;
+    return outOfBounds(c) || tab[c.x][c.y] == WALL;
+}
+
+bool Tablero::outOfBounds(Coor c){
+    return c.x < 0 || c.x > xLength || c.y < 0 || c.y >yLength;
 }
 
 int Tablero::getWidth() const {

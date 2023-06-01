@@ -30,6 +30,7 @@ public:
     void render() override;
 
     bool thereIsWall(Coor C);
+    bool outOfBounds(Coor C);
     int getWidth() const;
     int getHeight() const;
     Coor getPlayerOneInitialPosition() const;
