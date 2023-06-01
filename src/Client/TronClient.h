@@ -18,6 +18,7 @@
 #include "../Net/MessageServer.h"
 
 #include "../SDLUtils/Vector2D.h"
+#include "../SDLUtils/TextObject.h"
 
 #include "GameUtils/Player.h"
 
@@ -42,6 +43,7 @@ public:
     void init(int w, int h); 
     void run();
     void shutdown();
+    void handleInput(const SDL_Event &event);
 
     // send message to server
     void sendGameMessage(MessageClient::InputType input);
@@ -61,6 +63,9 @@ private:
 
     Player* m_player_1 = nullptr;
     Player* m_player_2 = nullptr;
+
+    TextObject* m_score_p1 = nullptr;
+    TextObject* m_score_p2 = nullptr;
 
     MessageServer::ServerState currentState, nextState;
 

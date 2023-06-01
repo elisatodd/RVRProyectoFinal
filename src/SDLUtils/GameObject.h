@@ -7,8 +7,6 @@
 
 #include "Vector2D.h"
 
-class TronClient;
-
 class GameObject {
 public:
 	GameObject() : m_transform(), m_size(), m_rotation(0), m_texture(nullptr), m_texture_size() {
@@ -17,7 +15,7 @@ public:
 
 	virtual ~GameObject();
 
-	virtual void handleInput(TronClient* client, const SDL_Event &event) {};
+	virtual void handleInput(const SDL_Event &event) {};
 	virtual void update() {};
 
 	inline bool isEnabled() const {

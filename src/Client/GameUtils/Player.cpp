@@ -1,8 +1,6 @@
 #include "Player.h"
-#include "CompetitorsSystem.h"
 #include "Tablero.h"
 #include "GameManager.h"
-#include "../TronClient.h"
 
 #include <iostream>
 
@@ -25,27 +23,8 @@ void Player::setControls(std::string u, std::string d, std::string r, std::strin
     moves[Directions::LEFT] = l;
 }
 
-void Player::handleInput(TronClient* client, const SDL_Event &event) {
-    if (event.type == SDL_KEYDOWN){
-        switch(event.key.keysym.scancode){
-            case SDL_SCANCODE_W : case SDL_SCANCODE_UP :{
-                client->sendGameMessage(MessageClient::InputType::UP);
-                break;
-            }
-            case SDL_SCANCODE_A : case SDL_SCANCODE_LEFT :{
-                client->sendGameMessage(MessageClient::InputType::LEFT);
-                break;
-            }
-            case SDL_SCANCODE_S : case SDL_SCANCODE_DOWN :{
-                client->sendGameMessage(MessageClient::InputType::DOWN);
-                break;
-            }
-            case SDL_SCANCODE_D : case SDL_SCANCODE_RIGHT :{
-                client->sendGameMessage(MessageClient::InputType::RIGHT);
-                break;
-            }
-        }
-    }
+void Player::handleInput(const SDL_Event &event) {
+
 }
 
 //Actualización de juego

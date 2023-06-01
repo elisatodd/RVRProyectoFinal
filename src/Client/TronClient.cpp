@@ -6,6 +6,7 @@
 #include "GameUtils/Tablero.h"
 #include "GameUtils/GameManager.h"
 
+
 TronClient::TronClient(const char *s, const char *p) : client_socket(s, p)
 {};
 
@@ -43,29 +44,12 @@ void TronClient::run()
 		Uint32 startTime = Window().currRealTime();
 		while (SDL_PollEvent(&event))
 		{
-			// Salir del server
-			if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
-			{
-				currentState = MessageServer::ServerState::SERVER_QUIT;
-				continue;
-			}
-
-			if (event.type == SDL_KEYDOWN){
-
-			}
-			if ((event.type == SDL_KEYDOWN && currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_SPACE))
-			{
-				std::cout << "Start Game\n";
-				sendGameMessage(MessageClient::InputType::PLAY);
-				clearGameObjects();
-				loadBackground("./assets/images/MenuReady.png");
-				continue;
-			}
-
+			// To Do : delete (unnecessary)
 			for (auto &o : objs_)
 				if (o->isEnabled())
-					o->handleInput(this, event);
-
+					o->handleInput(event);
+		
+			handleInput(event);
 		}
 
 		if (currentState == MessageServer::ServerState::SERVER_QUIT)
@@ -86,6 +70,9 @@ void TronClient::run()
 				o->render();
 		}
 
+		if (m_score_p1 != nullptr) m_score_p1->render();
+		if (m_score_p2 != nullptr) m_score_p2->render();
+
 		Window().presentRenderer();
 
 		// Delay so the rendering is not too fast
@@ -96,6 +83,44 @@ void TronClient::run()
 
 	sendMatchMessage(MessageClient::ClientMessageType::QUIT);
 	std::cout << "Quitting...\n";
+}
+
+void TronClient::handleInput(const SDL_Event &event){
+	// Salir del server
+	if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
+	{
+		currentState = MessageServer::ServerState::SERVER_QUIT;
+		return;
+	}
+
+	if (event.type == SDL_KEYDOWN){ // In-Game input
+		if (currentState == MessageServer::ServerState::PLAYING){
+			switch(event.key.keysym.scancode){
+				case SDL_SCANCODE_W : case SDL_SCANCODE_UP :{
+					sendGameMessage(MessageClient::InputType::UP);
+					break;
+				}
+				case SDL_SCANCODE_A : case SDL_SCANCODE_LEFT :{
+					sendGameMessage(MessageClient::InputType::LEFT);
+					break;
+				}
+				case SDL_SCANCODE_S : case SDL_SCANCODE_DOWN :{
+					sendGameMessage(MessageClient::InputType::DOWN);
+					break;
+				}
+				case SDL_SCANCODE_D : case SDL_SCANCODE_RIGHT :{
+					sendGameMessage(MessageClient::InputType::RIGHT);
+					break;
+				}
+			}
+		}// Menu input
+		else if (currentState == MessageServer::ServerState::READY && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
+			std::cout << "Start Game\n";
+			sendGameMessage(MessageClient::InputType::PLAY);
+			clearGameObjects();
+			loadBackground("./assets/images/MenuReady.png");
+		}
+	} 
 }
 
 void TronClient::shutdown()
@@ -254,7 +279,13 @@ void TronClient::loadGame(){
 	//std::cout << "Pos p1: " << m_player_1->getPlayerHead() << "\n";
 	//std::cout << "Pos p2: " << m_player_2->getPlayerHead() << "\n";
 
-	// Tell the server each client's initial pos and dir
+	// Create score items
+	m_score_p1 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P1: ", {255, 255, 255});
+	m_score_p1->setPosition(100, 100);
+
+
+	m_score_p2 = new TextObject(Window().renderer(), "./assets/fonts/Valorant Font.ttf", 24, "Score P2: ", {255, 255, 255});	
+	m_score_p2->setPosition(500, 100);
 
 
 }
