@@ -126,8 +126,8 @@ void TronServer::run()
             updateInfoClients();
 
             Uint32 frameTime = SDL_GetTicks() - startTime;
-            if (frameTime < 70)
-                std::this_thread::sleep_for(std::chrono::milliseconds(70 - frameTime));
+            if (frameTime < 200)
+                std::this_thread::sleep_for(std::chrono::milliseconds(200 - frameTime));
         }
 
         if (m_state == MessageServer::ServerState::GAME_OVER){
@@ -201,16 +201,21 @@ void TronServer::handleInput()
     switch (m_input_t1)
     {
     case MessageClient::InputType::LEFT:
-        m_dir_p1 = Vector2D(-1, 0);
+        if(m_dir_p1 != Vector2D(1, 0)){
+            m_dir_p1 = Vector2D(-1, 0);
+        }
     break;
     case MessageClient::InputType::RIGHT:
-        m_dir_p1 = Vector2D(1, 0);
+        if(m_dir_p1 != Vector2D(-1, 0))
+            m_dir_p1 = Vector2D(1, 0);
     break;
     case MessageClient::InputType::UP:
-        m_dir_p1 = Vector2D(0, -1);
+        if(m_dir_p1 != Vector2D(0, 1))
+            m_dir_p1 = Vector2D(0, -1);
     break;
     case MessageClient::InputType::DOWN:
-        m_dir_p1 = Vector2D(0, 1);
+        if(m_dir_p1 != Vector2D(0, -1))
+            m_dir_p1 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
         //std::cout << "[Server]p2  ready\n";
@@ -222,16 +227,20 @@ void TronServer::handleInput()
     switch (m_input_t2)
     {
     case MessageClient::InputType::LEFT:
-        m_dir_p2 = Vector2D(-1, 0);
+        if(m_dir_p2 != Vector2D(1, 0))
+            m_dir_p2 = Vector2D(-1, 0);
     break;
     case MessageClient::InputType::RIGHT:
-        m_dir_p2 = Vector2D(1, 0);
+        if(m_dir_p2 != Vector2D(-1, 0))
+            m_dir_p2 = Vector2D(1, 0);
     break;
     case MessageClient::InputType::UP:
-        m_dir_p2 = Vector2D(0, -1);
+        if(m_dir_p2 != Vector2D(0, 1))
+            m_dir_p2 = Vector2D(0, -1);
     break;
     case MessageClient::InputType::DOWN:
-        m_dir_p2 = Vector2D(0, 1);
+        if(m_dir_p2 != Vector2D(0, -1))
+            m_dir_p2 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
         //std::cout << "[Server]: p2 ready\n";
@@ -306,12 +315,17 @@ void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 
 void TronServer::stepSimulation()
 {
+    std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ") P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
+
     checkCollisions();
     checkWinners();
 
-    // Move player
-    m_pos_p1 += m_dir_p1;
-    m_pos_p2 += m_dir_p2;
+    // Move player if both are moving
+    if(m_dir_p1 != Vector2D(0, 0) && m_dir_p2 != Vector2D(0, 0))
+    {
+        m_pos_p1 += m_dir_p1;
+        m_pos_p2 += m_dir_p2;
+    }
 
     //std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ") ";
     //std::cout << "P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
@@ -326,8 +340,9 @@ void TronServer::checkCollisions()
         m_p1_hit = true;
         m_p2_hit = true;
 
-        std::cout << "Both hit in the same position: P(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ")\n";
-
+        std::cout << "Both hit in the same position:\n";
+        std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ")\n";
+        std::cout << "P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
         return;
     }
 
