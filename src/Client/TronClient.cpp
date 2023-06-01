@@ -137,28 +137,36 @@ void TronClient::client_message_thread()
 		client_socket.recv(server_recv_msg, net_socket);
 		switch (server_recv_msg.m_type)
 		{
-		case MessageServer::ServerMessageType::UPDATE_STATE:
-			nextState = server_recv_msg.m_state;
-			break;
-		case MessageServer::ServerMessageType::UPDATE_INFO:
-			updateGOsInfo(&server_recv_msg);
-			break;
-		case MessageServer::ServerMessageType::ACTION:
-		{
-			switch (server_recv_msg.m_action)
+			case MessageServer::ServerMessageType::UPDATE_STATE:
+				nextState = server_recv_msg.m_state;
+				break;
+			case MessageServer::ServerMessageType::UPDATE_INFO:
+				updateGOsInfo(&server_recv_msg);
+				break;
+			case MessageServer::ServerMessageType::ACTION:
 			{
-				case MessageServer::ActionType::MOVE:
+				switch (server_recv_msg.m_action)
 				{
-					if(m_player_1 != nullptr && m_player_2 != nullptr)
+					case MessageServer::ActionType::MOVE:
 					{
-						m_player_1->playerUpdate();
-						m_player_2->playerUpdate();
+						if(m_player_1 != nullptr && m_player_2 != nullptr)
+						{
+							m_player_1->playerUpdate();
+							m_player_2->playerUpdate();
+						}
+						break;
 					}
 				}
 				break;
 			}
-			break;
-		}
+			case MessageServer::ServerMessageType::ROUND_FINISHED:
+			{
+				if(m_player_1 != nullptr && m_player_2 != nullptr){
+					m_player_1->ResetPosition();
+					m_player_2->ResetPosition();
+				}
+				break;	
+			}
 		}
 	}
 }
@@ -291,11 +299,18 @@ void TronClient::loadGame(){
 
 void TronClient::updateScores(int s1, int s2){
 
-	std::string input1 = m_score_p1->getText();
-	std::string input2 = m_score_p2->getText();
+	if (s1 != m_score_p1->getScore()){
+		std::string newText1 = "Score: " + std::to_string(s1);
+		m_score_p1->setScore(s1);
+		//m_score_p1->setText(newText1);
+	}
 
-	m_score_p1->setText("Score: " + std::__cxx11::to_string(s1));
-	m_score_p2->setText("Score: " + std::__cxx11::to_string(s1));
+	if (s2 != m_score_p2->getScore()){
+		std::string newText2 = "Score: " + std::to_string(s2);
+		m_score_p1->setScore(s2);
+		//m_score_p2->setText(newText2);
+	}
+
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)

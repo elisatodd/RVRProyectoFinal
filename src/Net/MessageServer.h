@@ -14,7 +14,8 @@ public:
     enum ServerMessageType : uint8_t {
         UPDATE_STATE = 0,
         UPDATE_INFO = 1,
-        ACTION = 2
+        ACTION = 2,
+        ROUND_FINISHED = 3
     };
 
     enum ServerState : uint8_t {

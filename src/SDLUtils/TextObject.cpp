@@ -68,10 +68,12 @@ void TextObject::updateTexture() {
     }
 
     // Create a texture from the surface
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+     texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!texture) {
         // Handle texture creation error
         SDL_Log("Failed to create texture: %s", SDL_GetError());
+        SDL_FreeSurface(surface); // Free the surface before returning
+        return;
     }
 
     // Free the surface

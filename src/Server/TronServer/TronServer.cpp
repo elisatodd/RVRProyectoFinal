@@ -38,6 +38,11 @@ TronServer::TronServer(const char* s, const char* p) : m_server_socket(s, p){
     m_state = MessageServer::ServerState::WAITING;
     m_tab = new Tablero("assets/levels/level1.txt");
 
+    Coor c1 = m_tab->getPlayerOneInitialPosition(); 
+    m_pos_p1 = Vector2D(c1.x, c1.y);
+    Coor c2 = m_tab->getPlayerTwoInitialPosition(); 
+    m_pos_p2 = Vector2D(c2.x, c2.y);
+
     reset();
 };
 
@@ -48,7 +53,7 @@ void TronServer::shutdown(){
 
 void TronServer::server_message_thread()
 {
-    while (true)
+    while (!m_exit)
     { 
         MessageClient client_recv_msg;
         Socket *client_player_sock = new Socket(m_server_socket);
@@ -153,12 +158,31 @@ void TronServer::reset()
     m_p1_ready = false;
     m_p2_ready = false;
 
+    Coor c1 = m_tab->getPlayerOneInitialPosition(); 
+    Coor c2 = m_tab->getPlayerTwoInitialPosition(); 
+
+    m_pos_p1 = Vector2D(c1.x, c1.y);
+    m_pos_p2 = Vector2D(c2.x, c2.y);
 }
 
 void TronServer::onRoundFinished()
 {
     m_p1_hit = false;
     m_p2_hit = false;
+
+    Coor c1 = m_tab->getPlayerOneInitialPosition(); 
+    Coor c2 = m_tab->getPlayerTwoInitialPosition(); 
+
+    m_pos_p1 = Vector2D(c1.x, c1.y);
+    m_pos_p2 = Vector2D(c2.x, c2.y);
+
+    m_dir_p1 = Vector2D(0, 0);
+    m_dir_p2 = Vector2D(0, 0);
+
+    MessageServer msg;
+    msg.m_type = MessageServer::ServerMessageType::ROUND_FINISHED;
+    m_server_socket.send(msg, *m_tron_1);
+    m_server_socket.send(msg, *m_tron_2);
 }
 
 void TronServer::saveInput(Socket *player_sock, MessageClient::InputType input)
@@ -264,26 +288,33 @@ void TronServer::removePlayer(Socket *player_sock)
         printf("Can't remove non-registered player.\n");
 }
 
+// TO DO delete
 void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 {
     // TO DO : Initial values
     if (!pl)
     {
-       m_pos_p1 = msg->m_pos;
-       m_dir_p1 = msg->m_dir;
+       //m_pos_p1 = msg->m_pos;
+       //m_dir_p1 = msg->m_dir;
     }
     else
     {
-       m_pos_p2 = msg->m_pos;
-       m_dir_p2 = msg->m_dir;
+       //m_pos_p2 = msg->m_pos;
+       //m_dir_p2 = msg->m_dir;
     }
 }
 
 void TronServer::stepSimulation()
 {
-    // TO DO : 
-   // checkCollisions();
-   // checkWinners();
+    checkCollisions();
+    checkWinners();
+
+    // Move player
+    m_pos_p1 += m_dir_p1;
+    m_pos_p2 += m_dir_p2;
+
+    //std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ") ";
+    //std::cout << "P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
 }
 
 void TronServer::checkCollisions()
@@ -294,35 +325,14 @@ void TronServer::checkCollisions()
     if (m_pos_p1 == m_pos_p2){
         m_p1_hit = true;
         m_p2_hit = true;
+
+        std::cout << "Both hit in the same position: P(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ")\n";
+
         return;
     }
 
-    m_p1_hit = m_tab->thereIsWall({(int) m_pos_p1.getX(),(int) m_pos_p1.getY()});
-    m_p2_hit = m_tab->thereIsWall({(int) m_pos_p2.getX(),(int) m_pos_p2.getY()});
-
-
-    // int i = 0;
-    // while (i < players.size() && colState != BOTH_COLLIDED) {
-    //     Coor head = players[i]->player->getPlayerHead();
-    //     if (thisCollide(head, tab)) {
-    //         switch (colState) {
-    //             case NONE_COLLIDED:
-    //                 if (i == 0)
-    //                     colState = PLAYER1_COLLIDED;
-    //                 else
-    //                     colState = PLAYER2_COLLIDED;
-    //                 break;
-    //             case PLAYER1_COLLIDED:
-    //                 colState = BOTH_COLLIDED;
-    //                 break;
-    //             case PLAYER2_COLLIDED:
-    //             case BOTH_COLLIDED:
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    //     i++;
-    // }
+    //m_p1_hit = m_tab->thereIsWall({(int) m_pos_p1.getX(),(int) m_pos_p1.getY()});
+    //m_p2_hit = m_tab->thereIsWall({(int) m_pos_p2.getX(),(int) m_pos_p2.getY()});
 }
 
 void TronServer::checkWinners()
@@ -330,16 +340,17 @@ void TronServer::checkWinners()
     if(m_p1_hit && m_p2_hit)
     {
         std::cout << "Both Hit!\n";
+        onRoundFinished();
     }
     else if(m_p1_hit){
         std::cout << "P1 Hit!\n";
         m_score_p2++;
-      //  onRoundFinished();
+        onRoundFinished();
     }
     else if(m_p2_hit){
         std::cout << "P2 Hit!\n";
         m_score_p1++;
-      //  onRoundFinished();
+        onRoundFinished();
     }
 }
 
