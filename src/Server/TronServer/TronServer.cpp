@@ -33,6 +33,7 @@ TronServer::TronServer(const char* s, const char* p) : m_server_socket(s, p){
     m_tron_1 = m_tron_2 = nullptr;
     m_pos_p1 = m_pos_p2 = Vector2D(0, 0);
     m_dir_p1 = m_dir_p2 = Vector2D(0, 0);
+    m_score_p1 = m_score_p2 = 0;
 
     m_state = MessageServer::ServerState::WAITING;
     m_tab = new Tablero("assets/levels/level1.txt");
@@ -281,8 +282,8 @@ void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 void TronServer::stepSimulation()
 {
     // TO DO : 
-    checkCollisions();
-    checkWinners();
+   // checkCollisions();
+   // checkWinners();
 }
 
 void TronServer::checkCollisions()
@@ -333,12 +334,12 @@ void TronServer::checkWinners()
     else if(m_p1_hit){
         std::cout << "P1 Hit!\n";
         m_score_p2++;
-        onRoundFinished();
+      //  onRoundFinished();
     }
     else if(m_p2_hit){
         std::cout << "P2 Hit!\n";
         m_score_p1++;
-        onRoundFinished();
+      //  onRoundFinished();
     }
 }
 

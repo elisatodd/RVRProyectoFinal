@@ -1,7 +1,5 @@
 #include "TronClient.h"
 
-#include <regex>
-
 #include "../SDLUtils/SDLUtils.h"
 #include "../SDLUtils/Window.h"
 #include "../SDLUtils/GameObject.h"
@@ -296,26 +294,8 @@ void TronClient::updateScores(int s1, int s2){
 	std::string input1 = m_score_p1->getText();
 	std::string input2 = m_score_p2->getText();
 
-	std::string newScore1 = changeScoreTo(input1, s1);
-	std::string newScore2 = changeScoreTo(input2, s2);
-
-	m_score_p1->setText(newScore1);
-	m_score_p2->setText(newScore2);
-}
-
-std::string TronClient::changeScoreTo(const std::string& input, int newValue) {
-    std::regex regex("(\\d+)$");
-    
-    std::smatch match;
-    std::string modifiedString = input;
-    
-    if (std::regex_search(input, match, regex)) {
-        std::string numberStr = match.str();
-        
-        modifiedString = std::regex_replace(input, regex, std::to_string(newValue));
-    }
-    
-    return modifiedString;
+	m_score_p1->setText("Score: " + std::__cxx11::to_string(s1));
+	m_score_p2->setText("Score: " + std::__cxx11::to_string(s1));
 }
 
 void TronClient::sendGameMessage(MessageClient::InputType input)

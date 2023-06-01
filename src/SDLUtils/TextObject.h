@@ -20,6 +20,9 @@ public:
 
     void setPosition(int x, int y);
 
+    void setScore(int i);
+    int getScore();
+
 private:
     Vector2D position;
 
@@ -28,6 +31,8 @@ private:
     SDL_Texture* texture;
     SDL_Color color;
     std::string text;
+
+    int score = 0;
 
     void updateTexture();
 };

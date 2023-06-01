@@ -81,3 +81,11 @@ void TextObject::updateTexture() {
 void TextObject::setPosition(int x, int y){
     position = Vector2D(x, y);
 }
+
+void TextObject::setScore(int i){
+    score = i;
+}
+
+int TextObject::getScore(){
+    return score;
+}

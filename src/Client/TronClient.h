@@ -79,7 +79,6 @@ private:
     // update gOs according to data received from a message
     void updateGOsInfo(MessageServer *msg);
     void updateScores(int s1, int s2);
-    std::string changeScoreTo(const std::string& input, int newValue);
 
    // void changeState(const MessageServer::ServerState state);
     void loadBackground(const std::string &textFile);

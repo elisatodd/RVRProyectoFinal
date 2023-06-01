@@ -6,7 +6,7 @@
 #include "Serializable.h"
 #include "../SDLUtils/Vector2D.h"
 
-#define SERVER_MESSAGE_SIZE sizeof(ServerMessageType) + sizeof(ActionType) + 5 * sizeof(Vector2D) + 2 * sizeof(float) + sizeof(bool)*2 + sizeof(ServerState) + sizeof(int)
+#define SERVER_MESSAGE_SIZE sizeof(ServerMessageType) + sizeof(ActionType) + 4 * sizeof(Vector2D) + 2 * sizeof(int) + sizeof(bool) + sizeof(ServerState)
 
 class MessageServer: public Serializable
 {
@@ -35,7 +35,7 @@ public:
 
     MessageServer(const ServerState s) : m_state(s) {};
 
-    MessageServer(const Vector2D& pos_p1, const Vector2D& pos_p2, const Vector2D& dir_p1, const Vector2D& dir_p2, int score_p1, int score_p2) 
+    MessageServer(const Vector2D& pos_p1, const Vector2D& pos_p2, const Vector2D& dir_p1, const Vector2D& dir_p2, const int score_p1, const int score_p2) 
                 : m_pos_p1(pos_p1), m_pos_p2(pos_p2), m_dir_p1(dir_p1), m_dir_p2(dir_p2), m_score_p1(score_p1), m_score_p2(score_p2) {};
 
     void to_bin();

@@ -55,6 +55,12 @@ int MessageServer::from_bin(char * bobj)
     memcpy(&m_dir_p2, tmp, sizeof(Vector2D));
     tmp += sizeof(Vector2D);
 
+    memcpy(&m_score_p1, tmp, sizeof(int));
+    tmp += sizeof(int);
+
+    memcpy(&m_score_p2, tmp, sizeof(int));
+    tmp += sizeof(int);
+
     memcpy(&m_type,tmp, sizeof(ServerMessageType));
     tmp += sizeof(ServerMessageType);
 
