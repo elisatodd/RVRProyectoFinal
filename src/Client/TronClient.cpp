@@ -197,12 +197,10 @@ void TronClient::checkState()
 	// If a change in state is needed, it's done here
 	if (nextState != MessageServer::ServerState::EMPTY && currentState != nextState)
 	{
-		changeState(nextState); // this makes it so there's no problems with thread
+		changeState(nextState); 
 
 		currentState = nextState;
 		nextState = MessageServer::ServerState::EMPTY;
-
-		printf("Current State: %d -- Next State: %d \n", (int)currentState, (int)nextState);
 	}
 }
 
