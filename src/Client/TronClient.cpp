@@ -226,6 +226,7 @@ void TronClient::changeState(const MessageServer::ServerState state)
 	case MessageServer::ServerState::READY:
 	{
 		std::cout << "Match found.";
+		clearGameObjects();
 		loadBackground("./assets/images/MenuPlay.png");
 		break;
 	}

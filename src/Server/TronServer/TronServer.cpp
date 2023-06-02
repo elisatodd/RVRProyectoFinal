@@ -74,6 +74,7 @@ void TronServer::server_message_thread()
             // One player is missing --> wait for them
                 m_state = MessageServer::ServerState::WAITING;
 
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
             sendStateMessage();
         }
         break;
@@ -116,6 +117,7 @@ void TronServer::run()
             m_state = MessageServer::ServerState::PLAYING;
             m_p1_ready = m_p2_ready = false;
             std::cout << "[Server]: BothPlayersReady\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             sendStateMessage();
         }
 
@@ -163,6 +165,9 @@ void TronServer::reset()
 
     m_pos_p1 = Vector2D(c1.x, c1.y);
     m_pos_p2 = Vector2D(c2.x, c2.y);
+
+    m_score_p1 = 0;
+    m_score_p2 = 0;
     
 }
 
@@ -318,7 +323,6 @@ void TronServer::initPlayer(const int &pl, const MessageClient *msg)
 
 void TronServer::stepSimulation()
 {
-    std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ") P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
 
     checkCollisions();
     checkWinners();
