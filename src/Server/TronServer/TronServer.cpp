@@ -68,8 +68,7 @@ void TronServer::server_message_thread()
         case MessageClient::ClientMessageType::REGISTER:
         { // add player to the game
             int pl;
-            if (addPlayer(client_player_sock, pl))
-                initPlayer(pl, &client_recv_msg);
+            addPlayer(client_player_sock, pl);
 
             // Both players are initialized --> game can start
             if (m_tron_1 != nullptr && m_tron_2 != nullptr)

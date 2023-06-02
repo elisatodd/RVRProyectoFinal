@@ -1,10 +1,5 @@
 #include "MessageClient.h"
 
-void MessageClient::setDefaultValues(const Vector2D &p, const Vector2D &d)
-{
-    m_pos = p; m_dir = d; 
-};
-
 void MessageClient::to_bin()
 {
     alloc_data(CLIENT_MESSAGE_SIZE);
@@ -17,11 +12,6 @@ void MessageClient::to_bin()
 
     memcpy(tmp, &m_input, sizeof(InputType));
     tmp += sizeof(InputType);
-
-    memcpy(tmp, &m_pos, sizeof(Vector2D));
-    tmp += sizeof(Vector2D);
-
-    memcpy(tmp, &m_dir, sizeof(Vector2D));
 }
 
 int MessageClient::from_bin(char *bobj)
@@ -35,12 +25,6 @@ int MessageClient::from_bin(char *bobj)
     tmp += sizeof(ClientMessageType);
 
     memcpy(&m_input, tmp, sizeof(InputType));
-    tmp += sizeof(InputType);
-
-    memcpy(&m_pos, tmp, sizeof(Vector2D));
-    tmp += sizeof(Vector2D);
-
-    memcpy(&m_dir, tmp, sizeof(Vector2D));
 
     return 0;
 }

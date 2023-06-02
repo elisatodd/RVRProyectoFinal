@@ -6,7 +6,7 @@
 #include "Serializable.h"
 #include "../SDLUtils/Vector2D.h"
 
-#define CLIENT_MESSAGE_SIZE sizeof(ClientMessageType) + sizeof(InputType) + (2 * sizeof(Vector2D))
+#define CLIENT_MESSAGE_SIZE sizeof(ClientMessageType) + sizeof(InputType)
 
 class MessageClient: public Serializable
 {
@@ -30,9 +30,7 @@ public:
     MessageClient() {};
 
     MessageClient(const ClientMessageType& t, const InputType& i)
-        : m_type(t), m_input(i), m_pos(Vector2D(0,0)), m_dir(Vector2D(1,0)) {};
-
-    void setDefaultValues(const Vector2D &p, const Vector2D &d);
+        : m_type(t), m_input(i) {};
 
     void to_bin();
 
@@ -41,9 +39,6 @@ public:
 public:
     ClientMessageType m_type;
 
-    // input value for HANDLE_INPUT
+    // player input sent by the client
     InputType m_input;
-
-    Vector2D m_pos;
-    Vector2D m_dir;
 };

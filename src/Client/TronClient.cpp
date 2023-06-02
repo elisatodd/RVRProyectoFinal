@@ -16,17 +16,13 @@ void TronClient::init(int w, int h)
 	Window::init("TRON", w, h);
 	GameManager::init();
 
-	InitData data;
-	data.pos = Vector2D(0, 0);
-    data.dir = Vector2D(0, 0);
-
 	// init connection
 	std::thread([this]()
 		{ client_message_thread(); }).detach();
 	
 	changeState(currentState);
 
-	sendMatchMessage(MessageClient::ClientMessageType::REGISTER, &data);
+	sendMatchMessage(MessageClient::ClientMessageType::REGISTER);
 	std::cout << "[Client]: Trying to log...\n";
 
 }
@@ -317,6 +313,7 @@ void TronClient::updateScores(int s1, int s2){
 		std::cout << "P1 -> " << m_score_p1->getScore();		
 		std::cout << " P2 -> " << m_score_p2->getScore() <<"\n";
 
+		// ERROR : updating text texture causes an unexpected error
 		//m_score_p2->setText(newText2);
 	}
 
@@ -331,13 +328,10 @@ void TronClient::sendGameMessage(MessageClient::InputType input)
 	client_socket.send(login, client_socket);
 }
 
-void TronClient::sendMatchMessage(MessageClient::ClientMessageType msg, InitData *data)
+void TronClient::sendMatchMessage(MessageClient::ClientMessageType msg)
 {
 	MessageClient login;
 	login.m_type = msg;
-
-	if (data != nullptr)
-		login.setDefaultValues(data->pos, data->dir);
 
 	client_socket.send(login, client_socket);
 	printf("[Client]: Sending Match Message...\n");

@@ -27,12 +27,6 @@
 class GameObject;
 class SDL_Renderer;
 
-struct InitData
-{
-    Vector2D pos;
-    Vector2D dir;
-};
-
 class TronClient
 {
 public:
@@ -47,7 +41,7 @@ public:
 
     // send message to server
     void sendGameMessage(MessageClient::InputType input);
-    void sendMatchMessage(MessageClient::ClientMessageType msg, InitData *data = nullptr);
+    void sendMatchMessage(MessageClient::ClientMessageType msg);
 
     inline std::vector<GameObject *> *getGOsReference()
     {
