@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
+#include <mutex>
 
 #include "Vector2D.h"
 
@@ -32,7 +33,12 @@ private:
     SDL_Color color;
     std::string text;
 
+    int textWidth = 0;
+    int textHeight = 0;
+
     int score = 0;
+
+    std::mutex update_mutex;
 
     void updateTexture();
 };
