@@ -295,17 +295,17 @@ void TronClient::loadGame(){
 void TronClient::updateScores(int s1, int s2){
 
 	if (s1 != m_score_p1->getScore()){
-		std::string newText1 = "Score: " + std::to_string(s1);
+		std::string newText1 = "Score:" + std::to_string(s1);
 		m_score_p1->setScore(s1);
 		std::cout << newText1 <<"\n";
-		//m_score_p1->setText(newText1);
+		m_score_p1->setText(newText1);
 	}
 
 	if (s2 != m_score_p2->getScore()){
-		std::string newText2 = "Score: " + std::to_string(s2);
-		dm_score_p1->setScore(s2);
+		std::string newText2 = "Score:" + std::to_string(s2);
+		m_score_p2->setScore(s2);
 		std::cout << newText2 <<"\n";
-		//m_score_p2->setText(newText2);
+		m_score_p2->setText(newText2);
 	}
 
 }

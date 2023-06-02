@@ -42,6 +42,8 @@ void TextObject::setColor(SDL_Color newColor) {
 }
 
 void TextObject::render() {
+    if(!texture)
+        return;
     SDL_Rect destRect;
     destRect.x = position.getX();
     destRect.y = position.getY();

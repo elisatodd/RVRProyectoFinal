@@ -163,6 +163,7 @@ void TronServer::reset()
 
     m_pos_p1 = Vector2D(c1.x, c1.y);
     m_pos_p2 = Vector2D(c2.x, c2.y);
+    
 }
 
 void TronServer::onRoundFinished()
