@@ -20,23 +20,15 @@ public:
     Player(Coor c);
     virtual ~Player() {}; 
 
-    void handleInput(const SDL_Event &) override;
-
-    void setControls(std::string u, std::string d, std::string r, std::string l);
     void playerUpdate();
     Coor getPlayerHead();
     void setPlayerHead(Coor c);
     bool collisionWithThisBody(Coor c);
 
     virtual void render() override;
-    void procesaInput(char c, GameMode& gameMode);
+    
     void ChangeDir(Coor dir);
     void ResetPosition();
-    
-    std::string getMoveString(Directions dir);
-    bool hasThisMove(std::string s);
-    char ConvertStringToDir(std::string s);
-    void Teleport(Coor c);
 
 private:
     int id;

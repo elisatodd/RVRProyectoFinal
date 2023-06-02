@@ -28,7 +28,6 @@ public:
     void GenerateTablero(const std::string& file);
     void DeleteTablero();
     void ResetTableroToDefault();
-    //void Render();
 
     void render() override;
 

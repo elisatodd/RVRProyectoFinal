@@ -37,10 +37,6 @@ void Tablero::GenerateTablero(const std::string& file) {
 
     f.close();
 
-    // tab = TipoCasilla[xLength];
-    // for (int i = 0; i < xLength; i++) {
-    //     tab[i] = new TipoCasilla[yLength];
-    // }
     tab.resize(xLength, std::vector<TipoCasilla>(yLength));
     int cont = 0;
 
@@ -76,7 +72,7 @@ void Tablero::ResetTableroToDefault() {
 }
 
 void Tablero::render() {
-
+    // The boards render consists in drawing all of its obstacles
     int screenWidth = Window().width();
     int screenHeight = Window().height();
 
