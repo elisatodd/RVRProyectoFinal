@@ -169,6 +169,7 @@ void TronServer::reset()
     m_score_p1 = 0;
     m_score_p2 = 0;
     
+    m_tab->ResetTableroToDefault();
 }
 
 void TronServer::onRoundFinished()
