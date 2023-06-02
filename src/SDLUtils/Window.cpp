@@ -32,9 +32,6 @@ void Window::initWindow() {
 	// Create the renderer
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	assert(m_renderer != nullptr);
-
-	// hide cursor by default
-	// hideCursor();
 }
 
 void Window::initSDLExtensions() {

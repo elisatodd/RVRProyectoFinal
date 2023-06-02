@@ -60,6 +60,7 @@ void TextObject::render() {
   //  Render the texture
     SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 
+    // Alternative render mode
     // SDL_Rect src = build_sdlrect(0, 0, textWidth, textHeight);
     // SDL_Rect dest = build_sdlrect(position, textWidth, textHeight);
 
@@ -102,7 +103,7 @@ void TextObject::updateTexture() {
     // Free the surface
     SDL_FreeSurface(surface);
 
-    std::cout << "Finished updating texture\n";
+   // std::cout << "Finished updating texture\n";
 }
 
 void TextObject::setPosition(int x, int y){

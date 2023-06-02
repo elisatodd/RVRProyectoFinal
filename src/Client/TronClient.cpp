@@ -16,7 +16,6 @@ void TronClient::init(int w, int h)
 	Window::init("TRON", w, h);
 	GameManager::init();
 
-	// Initial Data must be different for each player (TO DO)
 	InitData data;
 	data.pos = Vector2D(0, 0);
     data.dir = Vector2D(0, 0);
@@ -28,7 +27,7 @@ void TronClient::init(int w, int h)
 	changeState(currentState);
 
 	sendMatchMessage(MessageClient::ClientMessageType::REGISTER, &data);
-	std::cout << "Trying to log...\n";
+	std::cout << "[Client]: Trying to log...\n";
 
 }
 
@@ -43,11 +42,6 @@ void TronClient::run()
 		Uint32 startTime = Window().currRealTime();
 		while (SDL_PollEvent(&event))
 		{
-			// To Do : delete (unnecessary)
-			for (auto &o : objs_)
-				if (o->isEnabled())
-					o->handleInput(event);
-		
 			handleInput(event);
 		}
 
@@ -81,12 +75,14 @@ void TronClient::run()
 	}
 
 	sendMatchMessage(MessageClient::ClientMessageType::QUIT);
-	std::cout << "Quitting...\n";
+	//std::cout << "[Client]: Quitting...\n";
 }
 
 void TronClient::handleInput(const SDL_Event &event)
 {
-	// Salir del server
+	// Will tell the server what input the client has pressed
+
+	// Exit the server
 	if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
 	{
 		currentState = MessageServer::ServerState::SERVER_QUIT;
@@ -133,6 +129,7 @@ void TronClient::shutdown()
 
 void TronClient::client_message_thread()
 {
+	// Manages the messages received
     MessageServer server_recv_msg;
 	Socket *net_socket = new Socket(client_socket);
 	while (true)
@@ -144,10 +141,12 @@ void TronClient::client_message_thread()
 				nextState = server_recv_msg.m_state;
 				break;
 			case MessageServer::ServerMessageType::UPDATE_INFO:
+				// Change rendering info according to server
 				updateGOsInfo(&server_recv_msg);
 				break;
 			case MessageServer::ServerMessageType::ACTION:
 			{
+				// Update game logic according to server
 				switch (server_recv_msg.m_action)
 				{
 					case MessageServer::ActionType::MOVE:
@@ -180,7 +179,6 @@ void TronClient::updateGOsInfo(MessageServer *msg)
 	{
 		//std::cout << "Update GOs info\n";
 
-		// TO DO: actualizar posición de los jugadores, tal vez sea necesario actualizar la direccion que lleva
         if (m_player_1 != nullptr) {
             Coor h(msg->m_pos_p1.getX(), msg->m_pos_p1.getY());
             Coor c(msg->m_dir_p1.getX(), msg->m_dir_p1.getY());
@@ -200,6 +198,7 @@ void TronClient::updateGOsInfo(MessageServer *msg)
 
 void TronClient::checkState()
 {
+	// If a change in state is needed, it's done here
 	if (nextState != MessageServer::ServerState::EMPTY && currentState != nextState)
 	{
 		changeState(nextState); // this makes it so there's no problems with thread
@@ -213,7 +212,7 @@ void TronClient::checkState()
 
 void TronClient::changeState(const MessageServer::ServerState state)
 {
-	std::cout << "Estado cambiado: objetos" <<objs_.size() <<"\n";
+	//std::cout << "Estado cambiado: objetos" <<objs_.size() <<"\n";
 
 	clearGameObjects();
 	std::cout << objs_.size() <<"\n";
@@ -221,27 +220,29 @@ void TronClient::changeState(const MessageServer::ServerState state)
 	switch (state)
 	{
 	case MessageServer::ServerState::WAITING:
-	{
-		std::cout << "Waiting...";
+	{ // Is waiting for an opponent to connect
+		std::cout << "[Client]: Waiting...\n";
 		loadBackground("./assets/images/MenuWaiting.png");
 		break;
 	}
 	case MessageServer::ServerState::READY:
-	{
-		std::cout << "Match found.";
+	{ // Opponent found: can start playing
+		std::cout << "[Client]: Match found.\n";
 		clearGameObjects();
 		loadBackground("./assets/images/MenuPlay.png");
 		break;
 	}
 	case MessageServer::ServerState::PLAYING:
-		std::cout << "Playing...";
+	{	// Game starts
+		std::cout << "[Client]: Playing...\n";
 		loadBackground("./assets/images/GameWithBoard.png");
 		// load game elements: players and score
 		loadGame();
 		break;
+	}
 	case MessageServer::ServerState::GAME_OVER:
 	{
-		std::cout << "Game Over.";
+		std::cout << "[Client]: Game Over.\n";
 		break;
 	}
 	default:
@@ -257,7 +258,6 @@ void TronClient::loadBackground(const std::string &textFile)
 	bg->setTexture(textFile);
 	bg->setEnabled(true);
 	objs_.push_back(bg);
-
 }
 
 void TronClient::loadGame(){
@@ -268,13 +268,12 @@ void TronClient::loadGame(){
 	if (tablero != nullptr){
 		objs_.push_back(tablero);
 	}else{
-		std::cout << "El tablero no existe\n";
+		std::cout << "[Client]: Board is non-existent\n";
 	}
 
-	// Add both players with initial position and size
+	// Add both players with initial position and size --> will be updated by server later
 	Coor p1_coor = GameManager::instance()->getTablero()->getPlayerOneInitialPosition();
 	m_player_1 = new Player(p1_coor);
-	//m_player_1->setTransform(200, Window().height() / 2);
 	m_player_1->setSize(GameManager::instance()->BOX_WIDTH, GameManager::instance()->BOX_WIDTH);
 	m_player_1->setTexture("./assets/images/Player1.png");
 	
@@ -282,7 +281,6 @@ void TronClient::loadGame(){
 
 	Coor p2_coor = GameManager::instance()->getTablero()->getPlayerTwoInitialPosition();
 	m_player_2 = new Player(p2_coor);
-	//m_player_2->setTransform(800, Window().height() / 2);
 	m_player_2->setSize(GameManager::instance()->BOX_WIDTH, GameManager::instance()->BOX_WIDTH);
 	m_player_2->setTexture("./assets/images/Player2.png");
 	
@@ -326,7 +324,7 @@ void TronClient::updateScores(int s1, int s2){
 
 void TronClient::sendGameMessage(MessageClient::InputType input)
 {
-	// Send an input message
+	// Send an input message to the server
 	MessageClient login;
 	login.m_type = MessageClient::ClientMessageType::HANDLE_INPUT;
 	login.m_input = input;		
@@ -342,7 +340,7 @@ void TronClient::sendMatchMessage(MessageClient::ClientMessageType msg, InitData
 		login.setDefaultValues(data->pos, data->dir);
 
 	client_socket.send(login, client_socket);
-	printf("Sending Match Message...\n");
+	printf("[Client]: Sending Match Message...\n");
 }
 
 void TronClient::refresh()

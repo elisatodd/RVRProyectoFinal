@@ -80,7 +80,6 @@ private:
     void updateGOsInfo(MessageServer *msg);
     void updateScores(int s1, int s2);
 
-   // void changeState(const MessageServer::ServerState state);
     void loadBackground(const std::string &textFile);
     void loadGame();
     void playLoad();

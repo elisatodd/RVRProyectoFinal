@@ -6,7 +6,7 @@
 void initGame(char **argv){
 
     TronClient client(argv[1], argv[2]);
-    client.init(900, 700);
+    client.init(900, 700); // window size
 
     client.run();
 
@@ -35,8 +35,9 @@ int main(int argc, char *argv[]){
     }
     catch(...)
     {
-        std::cerr << "Caught an unknown exception ...\n";
+        std::cerr << "[Client]: Caught an unknown exception ...\n";
     }
-    std::cout << "Salida\n";
+
+    std::cout << "[Client]: Client exit.\n";
     return 0;
 }
