@@ -40,7 +40,7 @@ private:
     bool m_p1_ready, m_p2_ready;
 
     int m_timer; // game over timer
-    int m_disconnect_timer;  //Timer to disconnect if no players
+    int m_disconnect_timer;  // if there are no players, disconnect
 
     MessageClient::InputType m_input_t1, m_input_t2; 
     
@@ -50,7 +50,7 @@ private:
     bool m_p1_hit, m_p2_hit;
     int m_score_p1, m_score_p2;
 
-    //Relevant Game Info
+    // Relevant Game Info
     Tablero* m_tab;
 
     // reset to default values
@@ -64,12 +64,11 @@ private:
     // add & remove player from server data
     bool addPlayer(Socket* player_sock, int& pl);
     void removePlayer(Socket* player_sock);
-    void initPlayer(const int& pl, const MessageClient* msg);
 
     // update loop simulation
     void stepSimulation();
 
-    // physics methods for update simulation
+    // physics methods for game simulation
     void checkCollisions();
     void checkWinners();
     bool playersAlreadyMoving();

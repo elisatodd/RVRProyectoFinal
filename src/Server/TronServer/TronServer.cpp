@@ -24,20 +24,23 @@ TronServer::TronServer(const char* s, const char* p) : m_server_socket(s, p){
     // bind socket
     m_server_socket.bind();
 
-    // ctrl+c handler init
+    // ctrl+c / exit handler init
     struct sigaction act;
     act.sa_handler = intHandler;
     sigaction(SIGINT, &act, NULL);
 
-    // default values
+    // default player values
     m_tron_1 = m_tron_2 = nullptr;
     m_pos_p1 = m_pos_p2 = Vector2D(0, 0);
     m_dir_p1 = m_dir_p2 = Vector2D(0, 0);
     m_score_p1 = m_score_p2 = 0;
 
     m_state = MessageServer::ServerState::WAITING;
+
+    // create game elements
     m_tab = new Tablero("assets/levels/level1.txt");
 
+    // Set players in the initial position given by the board
     Coor c1 = m_tab->getPlayerOneInitialPosition(); 
     m_pos_p1 = Vector2D(c1.x, c1.y);
     Coor c2 = m_tab->getPlayerTwoInitialPosition(); 
@@ -53,6 +56,7 @@ void TronServer::shutdown(){
 
 void TronServer::server_message_thread()
 {
+    // main loop that receives messages from clients
     while (!m_exit)
     { 
         MessageClient client_recv_msg;
@@ -67,8 +71,8 @@ void TronServer::server_message_thread()
             if (addPlayer(client_player_sock, pl))
                 initPlayer(pl, &client_recv_msg);
 
-            if (m_tron_1 != nullptr && m_tron_2 != nullptr)
             // Both players are initialized --> game can start
+            if (m_tron_1 != nullptr && m_tron_2 != nullptr)
                 m_state = MessageServer::ServerState::READY;
             else
             // One player is missing --> wait for them
@@ -82,9 +86,9 @@ void TronServer::server_message_thread()
         { // remove player from game
             removePlayer(client_player_sock);
 
+            // One or both players missing --> back to waiting
             if (m_tron_1 == nullptr || m_tron_2 == nullptr)
             {
-                // One or both players missing --> back to waiting
                 m_state = MessageServer::ServerState::WAITING;
                 sendStateMessage();
             }
@@ -103,11 +107,12 @@ void TronServer::server_message_thread()
 
 void TronServer::run()
 {
+    // main loop that sends messages to the clients
     while (!m_exit)
     {
         Uint32 startTime = SDL_GetTicks();
 
-        m_input_mutex.lock(); // mutex lock to protect from alterations
+        m_input_mutex.lock(); // lock to ensure correct input
         handleInput();
         m_input_mutex.unlock();
 
@@ -116,7 +121,7 @@ void TronServer::run()
             // Both players are ready and server is also ready --> game can start
             m_state = MessageServer::ServerState::PLAYING;
             m_p1_ready = m_p2_ready = false;
-            std::cout << "[Server]: BothPlayersReady\n";
+            std::cout << "[Server]: Both players are ready: starting game.\n";
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             sendStateMessage();
         }
@@ -124,16 +129,17 @@ void TronServer::run()
         if (m_state == MessageServer::ServerState::PLAYING)
         {
             // Game is active --> game loop
-            stepSimulation();
-            updateInfoClients();
+            stepSimulation(); // do game logic
+            updateInfoClients(); // and communicate it to the clients
 
+            // We cause a delay so the movement isn't too fast
             Uint32 frameTime = SDL_GetTicks() - startTime;
             if (frameTime < 200)
                 std::this_thread::sleep_for(std::chrono::milliseconds(200 - frameTime));
         }
 
         if (m_state == MessageServer::ServerState::GAME_OVER){
-            // Game is finished --> go back to menu/show end screen
+            // Game is finished --> start round again
             if(SDL_GetTicks() - m_timer > GAME_OVER_TIME) {
                 m_timer = 0;
                 m_state = MessageServer::ServerState::READY;
@@ -145,14 +151,14 @@ void TronServer::run()
 
     m_state = MessageServer::ServerState::SERVER_QUIT;
     sendStateMessage();    
-    std::cout << "Quit Server\n";
+    std::cout << "[Server]: Shutting down server.\n";
 }
 
 void TronServer::reset()
 {
+    // Sets game state to initial state
+
     m_input_t1 = m_input_t2 = MessageClient::InputType::NONE;
-    // m_pos_p1 = Vector2D(200, 360); // default positions
-    // m_pos_p2 = Vector2D(800, 360);
 
     m_p1_hit = false;
     m_p2_hit = false;
@@ -174,6 +180,8 @@ void TronServer::reset()
 
 void TronServer::onRoundFinished()
 {
+    // Resets positions so round can start again
+
     m_p1_hit = false;
     m_p2_hit = false;
 
@@ -188,6 +196,7 @@ void TronServer::onRoundFinished()
 
     m_tab->ResetTableroToDefault();
 
+    // Tells clients so they render correctly
     MessageServer msg;
     msg.m_type = MessageServer::ServerMessageType::ROUND_FINISHED;
     m_server_socket.send(msg, *m_tron_1);
@@ -201,7 +210,7 @@ void TronServer::saveInput(Socket *player_sock, MessageClient::InputType input)
     else if (*player_sock == *m_tron_2)
         m_input_t2 = input;
     else
-        printf("Received input from a unregistered client.\n");
+        printf("[Server]: Received input from a unregistered client.\n");
 }
 
 void TronServer::handleInput()
@@ -227,7 +236,7 @@ void TronServer::handleInput()
             m_dir_p1 = Vector2D(0, 1);
     break;
     case MessageClient::InputType::PLAY:
-        //std::cout << "[Server]p2  ready\n";
+        //std::cout << "[Server]p1  ready\n";
         m_p1_ready = true;
     break;
     }
@@ -265,13 +274,13 @@ bool TronServer::addPlayer(Socket *player_sock, int &pl)
 {
     if ((m_tron_1 && *player_sock == *m_tron_1) || (m_tron_2 && *player_sock == *m_tron_2))
     {
-        printf("Player already registered.\n");
+        printf("[Server]: Player already registered.\n");
         return false;
     }
 
     if (m_tron_1 != nullptr && m_tron_2 != nullptr)
     {
-        printf("Can't register player, game is full.\n");
+        printf("[Server]: Can't register player, game is full.\n");
         return false;
     }
 
@@ -279,13 +288,13 @@ bool TronServer::addPlayer(Socket *player_sock, int &pl)
     {
         m_tron_1 = player_sock;
         pl = 0;
-        printf("Registered Player One.\n");
+        printf("[Server]: Registered Player One.\n");
     }
     else
     {
         m_tron_2 = player_sock;
         pl = 1;
-        printf("Registered Player Two.\n");
+        printf("[Server]: Registered Player Two.\n");
     }
     return true;
 }
@@ -294,48 +303,30 @@ void TronServer::removePlayer(Socket *player_sock)
 {
     if (m_tron_1 != nullptr && *player_sock == *m_tron_1)
     {
-        printf("Player One Exit.\n");
+        printf("[Server]: Player One Exit.\n");
         m_tron_1 = nullptr;
     }
     else if (m_tron_2 != nullptr && *player_sock == *m_tron_2)
     {
-        printf("Player Two Exit.\n");
+        printf("[Server]: Player Two Exit.\n");
         m_tron_2 = nullptr;
     }
     else
-        printf("Can't remove non-registered player.\n");
-}
-
-// TO DO delete
-void TronServer::initPlayer(const int &pl, const MessageClient *msg)
-{
-    // TO DO : Initial values
-    if (!pl)
-    {
-       //m_pos_p1 = msg->m_pos;
-       //m_dir_p1 = msg->m_dir;
-    }
-    else
-    {
-       //m_pos_p2 = msg->m_pos;
-       //m_dir_p2 = msg->m_dir;
-    }
+        printf("[Server]: Can't remove non-registered player.\n");
 }
 
 void TronServer::stepSimulation()
 {
-
     checkCollisions();
     checkWinners();
 
     // Move player if both are moving
     if(playersAlreadyMoving())
     {
-
         m_tab->setWall(Coor(m_pos_p1.getX(), m_pos_p1.getY()));
         m_tab->setWall(Coor(m_pos_p2.getX(), m_pos_p2.getY()));
 
-        //Sets a wall before to able the collision afterwards
+        // Sets a wall before to enable the collision afterwards
         m_pos_p1 += m_dir_p1;
         m_pos_p2 += m_dir_p2;
     }
@@ -346,7 +337,7 @@ void TronServer::stepSimulation()
 
 void TronServer::checkCollisions()
 {
-    //Si no han empezado a moverse, no hay que comprobar posición
+    // Only check when players have started moving
     if(!playersAlreadyMoving())
     {
         return;
@@ -356,9 +347,9 @@ void TronServer::checkCollisions()
         m_p1_hit = true;
         m_p2_hit = true;
 
-        std::cout << "Both hit in the same position:\n";
-        std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ")\n";
-        std::cout << "P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
+        //std::cout << "Both hit in the same position:\n";
+        //std::cout << "P1(" << m_pos_p1.getX() << "," <<  m_pos_p1.getY() << ")\n";
+        //std::cout << "P2(" << m_pos_p2.getX() << "," <<  m_pos_p2.getY() << ")\n";
         return;
     }
 
@@ -368,26 +359,26 @@ void TronServer::checkCollisions()
 
 void TronServer::checkWinners()
 {
-    //SIf no one won, return
+    // if no one won, return
     if(!m_p1_hit && !m_p2_hit)
         return;
 
-    //Wait before reset to let see the player who was the one who collided
+    // Wait before reset to show the player who was the one who collided
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 
-    //Check who collided and restart
+    // Check who collided and restart
     if(m_p1_hit && m_p2_hit)
     {
-        std::cout << "Both Hit!\n";
+        std::cout << "[Server]: Both Hit!\n";
         onRoundFinished();
     }
     else if(m_p1_hit){
-        std::cout << "P1 Hit!\n";
+        std::cout << "[Server]: P1 Hit!\n";
         m_score_p2++;
         onRoundFinished();
     }
     else{
-        std::cout << "P2 Hit!\n";
+        std::cout << "[Server]: P2 Hit!\n";
         m_score_p1++;
         onRoundFinished();
     }
@@ -395,6 +386,7 @@ void TronServer::checkWinners()
 
 bool TronServer::playersAlreadyMoving()
 {
+    // Checks if both players have chosen a valid direction so the game can start
     return m_dir_p1 != Vector2D(0, 0) && m_dir_p2 != Vector2D(0, 0);
 }
 
@@ -402,18 +394,21 @@ void TronServer::updateInfoClients()
 {
     Vector2D act_dir1 = m_dir_p1;
     Vector2D act_dir2 = m_dir_p2;
-    // Wait for both players to chose a direction for the game to start
+
+    // Wait for both players to choose a direction for the game to start
     if(act_dir1 == Vector2D(0, 0) || act_dir2 == Vector2D(0, 0))
     {
         act_dir1 = Vector2D(0, 0);
         act_dir2 = Vector2D(0, 0);
     }
 
+    // Update the clients with render information
     MessageServer msg(m_pos_p1, m_pos_p2, act_dir1, act_dir2, m_score_p1, m_score_p2);
     msg.m_type = MessageServer::ServerMessageType::UPDATE_INFO;
     m_server_socket.send(msg, *m_tron_1);
     m_server_socket.send(msg, *m_tron_2);
 
+    // Update the clients with game logic information
     MessageServer msg2;
     msg2.m_type = MessageServer::ServerMessageType::ACTION;
     msg2.m_action = MessageServer::ActionType::MOVE;
@@ -423,11 +418,10 @@ void TronServer::updateInfoClients()
 
 void TronServer::sendStateMessage()
 {
+    // Sends message to the clients telling current state
+
     MessageServer msg(m_state);
     msg.m_type = MessageServer::ServerMessageType ::UPDATE_STATE;
-
-    // if(state == MessageServer::ServerState::GAME_OVER)
-    //     msg.playerOneHasWon = life_t2 == 0;
     
     if (m_tron_1 != nullptr)
         m_server_socket.send(msg, *m_tron_1);
